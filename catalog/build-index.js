@@ -25,8 +25,8 @@ const path = require('path');
 const crypto = require('crypto');
 
 const API = process.env.HUB_GITHUB_API || 'https://api.github.com';
-const BUILD_TOPIC = 'apphub-build';
-const LISTING_TOPIC = 'apphub-listing';
+const BUILD_TOPIC = 'helmdeck-build';
+const LISTING_TOPIC = 'helmdeck-listing';
 const REVIEW_MARK = /<!-- helmdeck-review stars=([1-5])( unsafe)? -->/;
 const CHECKOUT = /^https:\/\/[a-z0-9-]+\.lemonsqueezy\.com\/(checkout\/)?buy\/[\w-]+$/i;
 const MAX_READS = Number(process.env.CATALOG_MAX_READS) || 1500; // file reads per run
@@ -136,7 +136,7 @@ async function build({ token, feedbackRepo, prev = {} }) {
     let m = old ? old.manifest : null;
     let pushedAt = old ? old.pushedAt : null; // left old when not read, so it's read next run
     if ((!old || old.pushedAt !== r.pushed_at) && canRead()) {
-      m = cleanManifest(await readJson(gh, r.full_name, 'apphub.json'));
+      m = cleanManifest((await readJson(gh, r.full_name, 'helmdeck.json')) || (await readJson(gh, r.full_name, 'apphub.json')));
       pushedAt = r.pushed_at;
     }
     repos[key] = {
