@@ -1,0 +1,48 @@
+# Builds Helmdeck's live catalog every hour. Lives in the public feedback repo
+# (see catalog/README.md) and publishes to its `catalog` branch.
+name: Helmdeck catalog
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+  push:
+    paths: ['catalog/**', 'sellers.json']
+permissions:
+  contents: write
+concurrency: catalog
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check for the signing key
+        id: key
+        env:
+          CATALOG_SIGNING_KEY: ${{ secrets.CATALOG_SIGNING_KEY }}
+        run: |
+          if [ -n "$CATALOG_SIGNING_KEY" ]; then echo "ready=yes" >> "$GITHUB_OUTPUT"
+          else echo "::notice::Add the CATALOG_SIGNING_KEY secret to start publishing the catalog."; fi
+      - name: Get the last run's state
+        if: steps.key.outputs.ready == 'yes'
+        run: |
+          mkdir -p out
+          curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/catalog/state.json" -o out/state.json || rm -f out/state.json
+      - name: Build the catalog
+        if: steps.key.outputs.ready == 'yes'
+        run: node catalog/build-index.js out
+        env:
+          CATALOG_TOKEN: ${{ secrets.CATALOG_TOKEN || github.token }}
+          CATALOG_SIGNING_KEY: ${{ secrets.CATALOG_SIGNING_KEY }}
+          FEEDBACK_REPO: ${{ github.repository }}
+      - name: Publish
+        if: steps.key.outputs.ready == 'yes'
+        run: |
+          cd out
+          git init -q -b catalog
+          git add -A
+          git -c user.name=helmdeck-catalog -c user.email=actions@users.noreply.github.com commit -qm "Catalog $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" catalog
