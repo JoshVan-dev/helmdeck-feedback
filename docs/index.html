@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helmdeck: one place for all your AI builds</title>
+<meta name="description" content="Helmdeck is a desktop hub for the AI apps, bots and tools you build. Open them in one click, see live status like profit or progress, run them on a schedule and check them from your phone.">
+<meta property="og:title" content="Helmdeck: one place for all your AI builds">
+<meta property="og:description" content="Open every AI build in one click, watch live stats, and check them from your phone.">
+<meta property="og:image" content="hub.png">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d12; --panel: #12151d; --panel-2: #181c26; --line: #252a36;
+    --text: #eef0f5; --text-2: #b4bac8; --text-3: #7d8496;
+    --accent: #7c6cff; --accent-2: #a99fff; --green: #22c55e; --teal: #5eead4;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; text-decoration: none; }
+  .brand img { width: 30px; height: 30px; }
+  nav .links { display: flex; gap: 24px; align-items: center; }
+  nav .links a { text-decoration: none; color: var(--text-2); font-size: 15px; }
+  nav .links a:hover { color: var(--text); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 12px; font-weight: 600; text-decoration: none; border: 1px solid var(--line); background: var(--panel-2); transition: transform .15s, background .15s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 30px rgba(124, 108, 255, .35); }
+  .btn.primary:hover { background: #8d7fff; }
+  .btn.small { padding: 8px 16px; font-size: 14px; }
+
+  header.hero { text-align: center; padding: 72px 0 40px; position: relative; }
+  header.hero::before { content: ""; position: absolute; inset: -120px 0 auto; height: 520px; background: radial-gradient(600px 300px at 50% 30%, rgba(124, 108, 255, .28), transparent 70%); pointer-events: none; z-index: -1; }
+  .pill { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text-2); font-size: 13px; margin-bottom: 22px; }
+  .pill b { color: var(--teal); font-weight: 600; }
+  h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05; letter-spacing: -1.5px; margin: 0 0 20px; font-weight: 800; }
+  h1 span { background: linear-gradient(90deg, var(--accent-2), var(--teal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--text-2); max-width: 680px; margin: 0 auto 32px; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .platforms { color: var(--text-3); font-size: 14px; margin-top: 16px; }
+  .shot { margin: 56px auto 0; max-width: 1040px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0, 0, 0, .55), 0 0 0 8px rgba(124, 108, 255, .06); }
+  .shot img { display: block; width: 100%; height: auto; }
+
+  section { padding: 88px 0 0; }
+  h2 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.8px; margin: 0 0 12px; text-align: center; font-weight: 750; }
+  .sub { text-align: center; color: var(--text-2); max-width: 640px; margin: 0 auto 44px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .card .ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 14px; background: rgba(124, 108, 255, .15); color: var(--accent-2); }
+  .card .ic svg { width: 22px; height: 22px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--text-2); font-size: 15px; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
+  .step { position: relative; padding: 24px 24px 24px 72px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
+  .step::before { counter-increment: s; content: counter(s); position: absolute; left: 22px; top: 22px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); font-weight: 700; }
+  .step h3 { margin: 4px 0 4px; font-size: 17px; }
+  .step p { margin: 0; color: var(--text-2); font-size: 15px; }
+
+  .prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+  .price { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 28px; display: flex; flex-direction: column; }
+  .price.hot { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 20px 60px rgba(124, 108, 255, .2); position: relative; }
+  .price.hot .tag { position: absolute; top: -12px; left: 28px; background: var(--accent); padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .price h3 { margin: 0; font-size: 18px; }
+  .amount { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin: 10px 0 0; }
+  .amount small { font-size: 16px; color: var(--text-3); font-weight: 500; letter-spacing: 0; }
+  .alt { color: var(--text-3); font-size: 14px; margin: 2px 0 18px; }
+  .price ul { list-style: none; padding: 0; margin: 0 0 24px; flex: 1; }
+  .price li { padding: 6px 0 6px 28px; position: relative; color: var(--text-2); font-size: 15px; }
+  .price li::before { content: ""; position: absolute; left: 0; top: 11px; width: 16px; height: 16px; border-radius: 50%; background: rgba(34, 197, 94, .18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/11px no-repeat; }
+  .price .btn { justify-content: center; }
+  .fine { text-align: center; color: var(--text-3); font-size: 14px; margin-top: 18px; }
+
+  .faq { max-width: 760px; margin: 0 auto; }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; list-style: none; }
+  summary::after { content: "+"; float: right; color: var(--text-3); font-weight: 400; }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--text-2); margin: 10px 0 0; }
+
+  .final { text-align: center; margin: 96px 0 0; padding: 56px 24px; border-radius: 24px; background: linear-gradient(135deg, rgba(124, 108, 255, .22), rgba(94, 234, 212, .08)); border: 1px solid var(--line); }
+  .final h2 { margin-bottom: 10px; }
+  .final p { color: var(--text-2); margin: 0 0 26px; }
+  footer { color: var(--text-3); font-size: 14px; padding: 48px 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a { color: var(--text-2); text-decoration: none; margin-left: 18px; }
+
+  @media (max-width: 860px) {
+    .grid, .steps, .prices { grid-template-columns: 1fr; }
+    nav .links a:not(.btn) { display: none; }
+    header.hero { padding-top: 40px; }
+    footer a { margin: 0 18px 0 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#"><img src="logo.svg" alt="">Helmdeck</a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="pill"><b>New</b> · Share your builds with everyone in one click</div>
+    <h1>One place for <span>every AI build</span> you make</h1>
+    <p class="lead">Trading bots, chat tools, game mod builders, local models. Helmdeck opens them in one click, shows how each one is doing right now, keeps them running, and lets you check on them from your phone.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+      <a class="btn" href="#pricing">See Pro</a>
+    </div>
+    <div class="platforms">Windows · Mac · Linux · Free for up to 3 builds</div>
+    <div class="shot"><img src="hub.png" alt="Helmdeck showing a trading bot running with live profit for today and a chart" width="1280" height="800"></div>
+  </header>
+
+  <section id="features">
+    <h2>Stop juggling terminals and tabs</h2>
+    <p class="sub">Everything you've built with AI, in one window that tells you what's running, what's done and what needs you.</p>
+    <div class="grid">
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5l12 7-12 7z"/></svg></div><h3>One-click launch</h3><p>Scripts, servers, bots and web apps each get an icon. Double-click to start. No more remembering commands.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 6-8 3 3"/></svg></div><h3>Live status</h3><p>See today's profit, progress or a status message on every build, with a chart and an alert when something needs you.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><h3>On your phone</h3><p>Pair with a QR code. Start, stop and check your builds from anywhere in the house.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/></svg></div><h3>One home for AI keys</h3><p>Add your OpenAI, Anthropic, Gemini or local model keys once. Every build uses them, free and local models first, and keys never leak into shared builds.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M5 12H2M22 12h-3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Keeps them running</h3><p>Restart after a crash, start with your PC, or run on a schedule. Plus a spend tracker with a monthly AI budget.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg></div><h3>Share and discover</h3><p>Share a build in one click, install other people's with a safety scan first, and add friends to swap private builds.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Up and running in a minute</h2>
+    <p class="sub">No account needed to start. Try the live demo bot right away.</p>
+    <div class="steps">
+      <div class="step"><h3>Download Helmdeck</h3><p>Install it on Windows, Mac or Linux. It's free for up to 3 builds.</p></div>
+      <div class="step"><h3>Add your builds</h3><p>Pick a folder or a command. Helmdeck gives each build an icon and finds its status.</p></div>
+      <div class="step"><h3>Watch them work</h3><p>Live stats on every tile, alerts when something needs you, and your phone to check in from anywhere.</p></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>Simple pricing</h2>
+    <p class="sub">Start free. Upgrade when you have more than 3 builds or want your phone and keep-alive tools.</p>
+    <div class="prices">
+      <div class="price">
+        <h3>Free</h3>
+        <div class="amount">$0</div>
+        <div class="alt">Forever</div>
+        <ul>
+          <li>Up to 3 builds</li>
+          <li>Live status and charts</li>
+          <li>AI key vault</li>
+          <li>Browse and install shared builds</li>
+          <li>Share your builds</li>
+        </ul>
+        <a class="btn" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download</a>
+      </div>
+      <div class="price hot">
+        <span class="tag">Early bird</span>
+        <h3>Pro, lifetime</h3>
+        <div class="amount">$39 <small>once</small></div>
+        <div class="alt">Or $29 a year, or $4 a month</div>
+        <ul>
+          <li>Unlimited builds</li>
+          <li>Phone app</li>
+          <li>Restart, start with PC and schedules</li>
+          <li>AI budget caps</li>
+          <li>Daily backup to your GitHub</li>
+          <li>Sell your builds</li>
+        </ul>
+        <a class="btn primary" href="https://helmdeck.lemonsqueezy.com/checkout/buy/bb9fc525-b210-4ca1-99fe-99503ac0c77c">Get Pro for life</a>
+        <a class="btn" style="margin-top:10px" href="https://helmdeck.lemonsqueezy.com/checkout/buy/8322bfbb-f262-4d39-ba0e-63eef34be83f">Monthly or yearly</a>
+      </div>
+      <div class="price">
+        <h3>Business</h3>
+        <div class="amount">Per seat</div>
+        <div class="alt">Billed monthly</div>
+        <ul>
+          <li>Everything in Pro for the whole team</li>
+          <li>Shared team workspace</li>
+          <li>Team apps and filters</li>
+          <li>One key, activated on every member's PC</li>
+        </ul>
+        <a class="btn" href="https://helmdeck.lemonsqueezy.com/checkout/buy/b57ae067-21d5-4185-9cbe-24f4d7b556bf">Get Business</a>
+      </div>
+    </div>
+    <p class="fine">Secure checkout by Lemon Squeezy. Your key arrives by email; paste it into Helmdeck and you're done.</p>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <p class="sub">&nbsp;</p>
+    <div class="faq">
+      <details><summary>What counts as a "build"?</summary><p>Anything you made or use: a Python or Node script, a bot, a local web app, a game mod tool, an AI app like ComfyUI or Open WebUI. If you can start it with a command, a file or a link, Helmdeck can run it.</p></details>
+      <details><summary>Does Helmdeck see my code or my AI keys?</summary><p>No. Everything stays on your PC. Your keys are stored encrypted on your machine, and builds you install from others never get your raw keys.</p></details>
+      <details><summary>Windows says "Windows protected your PC". Is it safe?</summary><p>Helmdeck is new, so Windows doesn't recognize it yet. Click "More info", then "Run anyway". Signed installers are coming.</p></details>
+      <details><summary>How do I show live stats like profit?</summary><p>Your build writes a small status.json file (or serves a status link). The free Python and Node helpers make it two lines of code.</p></details>
+      <details><summary>Is lifetime really lifetime?</summary><p>Yes. Pay once and every future update is included. The early-bird price goes up later.</p></details>
+      <details><summary>How do I report a bug or suggest a feature?</summary><p>Click the light bulb in Helmdeck, or open the <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">ideas board</a>. The most-voted ideas get built first.</p></details>
+    </div>
+  </section>
+
+  <div class="final">
+    <h2>Give your AI builds a home</h2>
+    <p>Free for up to 3 builds. Windows, Mac and Linux.</p>
+    <a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a>
+  </div>
+
+  <footer>
+    <span>© 2026 Helmdeck</span>
+    <span><a href="https://github.com/JoshVan-dev/helmdeck-releases/releases">All downloads</a><a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a></span>
+  </footer>
+</div>
+</body>
+</html>
