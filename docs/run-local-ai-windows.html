@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to run Ollama, ComfyUI and your AI bots on Windows (2026)</title>
+<meta name="description" content="A plain guide to running local AI on a Windows PC: chat models with Ollama or LM Studio, images and video with ComfyUI, and your own bots, all from one screen.">
+<meta property="og:title" content="How to run Ollama, ComfyUI and your AI bots on Windows (2026)">
+<meta property="og:description" content="A plain guide to running local AI on a Windows PC: chat models with Ollama or LM Studio, images and video with ComfyUI, and your own bots, all from one screen.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/run-local-ai-windows.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/run-local-ai-windows.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "HowTo", "name": "Run Ollama, ComfyUI and your AI bots on Windows", "step": [{"@type": "HowToStep", "name": "Pick what your PC can run"}, {"@type": "HowToStep", "name": "Install Ollama or LM Studio"}, {"@type": "HowToStep", "name": "Install ComfyUI"}, {"@type": "HowToStep", "name": "List your own bots and scripts"}, {"@type": "HowToStep", "name": "Put it all on one screen with Helmdeck"}]}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Guide</span>
+<h1>Run Ollama, ComfyUI and your own AI bots on Windows</h1>
+<p class="lead">Local AI on Windows usually means one terminal per tool and a lot of guessing about what's still running. Here's a setup that keeps it simple, current as of October 2026.</p>
+
+<h2>1. Pick what your PC can run</h2>
+<p>The graphics card's memory (VRAM) decides most of it. In Windows, open Task Manager, go to Performance, then GPU, and look at "Dedicated GPU memory".</p>
+<div class="table"><table>
+<tr><th>VRAM</th><th>Chat and coding</th><th>Images</th><th>Video</th></tr>
+<tr><td>8 GB</td><td>Gemma 4 12B or a small coder model</td><td>SDXL, Z-Image Turbo (slow)</td><td>Wan 2.2 5B (GGUF)</td></tr>
+<tr><td>12–16 GB</td><td>Gemma 4 12B, Qwen3.6 35B-A3B (tight)</td><td>Z-Image Turbo, FLUX (FP8)</td><td>Wan 2.2 (GGUF), HunyuanVideo 1.5 (FP8)</td></tr>
+<tr><td>24 GB+</td><td>Qwen3.6 27B</td><td>FLUX.2, Qwen-Image</td><td>Wan 2.2, HunyuanVideo 1.5</td></tr>
+</table></div>
+<p>Check each model's license before selling what you make with it. Some are free for personal use only.</p>
+
+<h2>2. Chat models: Ollama or LM Studio</h2>
+<p><strong>Ollama</strong> is the simplest. Install it from ollama.com, then in PowerShell:</p>
+<pre>ollama pull gemma4
+ollama run gemma4</pre>
+<p>Each model comes in several sizes. Pick the one that fits your VRAM on its page at ollama.com/library.</p>
+<p><strong>LM Studio</strong> gives you the same models with a point-and-click app. Both run a local server that other apps can use, at <code>localhost:11434</code> for Ollama and <code>localhost:1234</code> for LM Studio.</p>
+
+<h2>3. Images and video: ComfyUI</h2>
+<p>ComfyUI runs nearly every open image and video model. The easiest route on Windows is the ComfyUI desktop app. Download a model into its <code>models</code> folder, then load a template workflow for it.</p>
+
+<h2>4. Your own bots and scripts</h2>
+<p>Most AI builds are a folder with a Python or Node script. Write down the command that starts each one, and the folder it runs in.</p>
+
+<h2>5. Put it all on one screen</h2>
+<p>This is the part Helmdeck does. On first run, Quick setup finds Ollama, LM Studio and ComfyUI and adds them in one click. Drag in your bot folders and each becomes a tile you double-click to start. Turn on "Restart if it stops" for anything that has to stay up, and phone alerts if you want a ping when one needs you.</p>
+<p>Your AI keys live in Helmdeck too. Builds get them automatically, and Helmdeck uses local models first, then free tiers, then paid ones.</p>
+
+<h2>Troubleshooting</h2>
+<h3>"Windows protected your PC"</h3>
+<p>New apps that aren't widely downloaded yet show this. Click "More info", then "Run anyway".</p>
+<h3>Out of memory errors in ComfyUI</h3>
+<p>Use a smaller version of the model (FP8 or GGUF), lower the resolution, or close other apps that use the GPU.</p>
+<h3>A model is slow</h3>
+<p>If it doesn't fit in VRAM it spills into normal memory and slows to a crawl. Pick a smaller model from the table above.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+</div></footer>
+</body>
+</html>

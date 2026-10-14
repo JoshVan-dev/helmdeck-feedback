@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free AI starter builds: digest, file chat, price tracker and more | Helmdeck</title>
+<meta name="description" content="Ready-to-run AI builds that come with Helmdeck: a daily AI news digest, chat with your files, a crypto and stock price tracker, an uptime monitor, a Discord bot and more.">
+<meta property="og:title" content="Free AI starter builds: digest, file chat, price tracker and more | Helmdeck">
+<meta property="og:description" content="Ready-to-run AI builds that come with Helmdeck: a daily AI news digest, chat with your files, a crypto and stock price tracker, an uptime monitor, a Discord bot and more.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/starter-builds.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/starter-builds.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "Helmdeck starter builds", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Daily AI digest"}, {"@type": "ListItem", "position": 2, "name": "Chat with a folder"}, {"@type": "ListItem", "position": 3, "name": "Price tracker"}, {"@type": "ListItem", "position": 4, "name": "Uptime monitor"}, {"@type": "ListItem", "position": 5, "name": "Web page watcher"}, {"@type": "ListItem", "position": 6, "name": "Discord bot"}, {"@type": "ListItem", "position": 7, "name": "AI chat page"}, {"@type": "ListItem", "position": 8, "name": "Background job"}, {"@type": "ListItem", "position": 9, "name": "Python AI helper"}, {"@type": "ListItem", "position": 10, "name": "Blank build"}]}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Starter builds</span>
+<h1>AI builds that work the moment you add them</h1>
+<p class="lead">Every copy of Helmdeck comes with these. Open Browse, press <strong>Make it</strong>, and the build is on your screen and running. They're plain code you can read and change, with live status and AI already wired up.</p>
+<div class="cards"><div class="card"><span class="tag">Official</span><h3>Daily AI digest</h3><p>Every morning, it reads the news feeds and subreddits you pick and writes you a short AI digest. Read it in the browser or on your phone.</p></div><div class="card"><span class="tag">Official</span><h3>Chat with a folder</h3><p>Ask questions about your notes, docs and exports. Answers say which files they came from, and a local model keeps your files on your PC.</p></div><div class="card"><span class="tag">Official</span><h3>Price tracker</h3><p>Crypto and stock prices on the tile with a chart, and a ping when one crosses the target you set. It only watches prices and never trades.</p></div><div class="card"><span class="tag">Official</span><h3>Uptime monitor</h3><p>Checks your websites every few minutes. The tile turns red and your phone pings the moment one goes down.</p></div><div class="card"><span class="tag">Official</span><h3>Web page watcher</h3><p>Watches any page and tells you, with a one-line AI summary, when it changes or mentions a word you care about.</p></div><div class="card"><span class="tag">Official</span><h3>Discord bot</h3><p>Answers questions in your Discord server with your own AI keys. No packages to install.</p></div><div class="card"><span class="tag">Official</span><h3>AI chat page</h3><p>Your own ChatGPT-style page that uses your keys or local models. It works on your phone too.</p></div><div class="card"><span class="tag">Official</span><h3>Background job</h3><p>A script that runs every few minutes and reports a number Helmdeck charts over time.</p></div><div class="card"><span class="tag">Official</span><h3>Python AI helper</h3><p>Drop text files in an inbox folder and get AI summaries back.</p></div><div class="card"><span class="tag">Official</span><h3>Blank build</h3><p>An empty starting point with status and AI already wired up.</p></div></div>
+<h2>How they use AI</h2>
+<p>Builds use the AI keys saved in Helmdeck, so you never paste a key into code. Helmdeck tries a local model first if you have one (Ollama or LM Studio), then free tiers, then paid keys.</p>
+<h2>Make your own</h2>
+<p>Any folder with a script can be a Helmdeck build. Add two lines and it reports live status to its tile:</p>
+<pre>const { report } = require('./helmdeck-status');
+report('running', { stat: '42 new leads', message: 'Checked 2 min ago' });</pre>
+<p>When it's good, press Share and it shows up in everyone's Browse.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+</div></footer>
+</body>
+</html>
