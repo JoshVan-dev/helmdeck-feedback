@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Helmdeck: one place for all your AI builds</title>
-<meta name="description" content="Helmdeck is a desktop hub for the AI apps, bots and tools you build. Open them in one click, see live status like profit or progress, run them on a schedule and check them from your phone.">
+<meta name="description" content="Helmdeck is a desktop hub for the AI apps, bots and tools you build. Open them in one click, see live status like profit or progress, keep them running, and get a ping on your phone when one needs you.">
 <meta property="og:title" content="Helmdeck: one place for all your AI builds">
-<meta property="og:description" content="Open every AI build in one click, watch live stats, and check them from your phone.">
+<meta property="og:description" content="Open every AI build in one click, watch live stats, and get a ping on your phone when one needs you.">
 <meta property="og:image" content="https://helmdeck.org/hub.png">
 <meta property="og:url" content="https://helmdeck.org/">
 <meta property="og:type" content="website">
@@ -15,90 +15,215 @@
 <link rel="canonical" href="https://helmdeck.org/">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+  /* Layout: a ship's bridge. Left-aligned pitch beside a live instrument deck, then
+     plain sections that read like a control panel's manual. Brass is the one accent;
+     green, amber and red are only ever status, exactly as in the app. */
   :root {
-    --bg: #0b0d12; --panel: #12151d; --panel-2: #181c26; --line: #252a36;
-    --text: #eef0f5; --text-2: #b4bac8; --text-3: #7d8496;
-    --accent: #7c6cff; --accent-2: #a99fff; --green: #22c55e; --teal: #5eead4;
+    --bg: #0d1117; --bg-2: #121821; --panel: #161d28; --panel-2: #1c2533; --line: #263142; --line-2: #33415a;
+    --text: #e8edf4; --text-2: #a9b4c4; --text-3: #75839a;
+    --brass: #e3b261; --brass-2: #f2cd8b; --brass-ink: #1a1307;
+    --ok: #3ccf7e; --wait: #f2b544; --bad: #f0645a; --info: #6aa8ff;
+    --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    --r: 14px;
+    color-scheme: dark;
   }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f6f4ef; --bg-2: #efece4; --panel: #ffffff; --panel-2: #f3f1ea; --line: #e2ddd1; --line-2: #cfc8b8;
+      --text: #161b23; --text-2: #485263; --text-3: #6e7787;
+      --brass: #a8711c; --brass-2: #8a5c14; --brass-ink: #fffaf0;
+      --ok: #178a4c; --wait: #b77708; --bad: #c8382f; --info: #2f6fd1;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f4ef; --bg-2: #efece4; --panel: #ffffff; --panel-2: #f3f1ea; --line: #e2ddd1; --line-2: #cfc8b8;
+    --text: #161b23; --text-2: #485263; --text-3: #6e7787;
+    --brass: #a8711c; --brass-2: #8a5c14; --brass-ink: #fffaf0;
+    --ok: #178a4c; --wait: #b77708; --bad: #c8382f; --info: #2f6fd1;
+    color-scheme: light;
+  }
+
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; text-decoration: none; }
-  .brand img { width: 30px; height: 30px; }
-  nav .links { display: flex; gap: 24px; align-items: center; }
-  nav .links a { text-decoration: none; color: var(--text-2); font-size: 15px; }
-  nav .links a:hover { color: var(--text); }
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 12px; font-weight: 600; text-decoration: none; border: 1px solid var(--line); background: var(--panel-2); transition: transform .15s, background .15s; }
-  .btn:hover { transform: translateY(-1px); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 30px rgba(124, 108, 255, .35); }
-  .btn.primary:hover { background: #8d7fff; }
-  .btn.small { padding: 8px 16px; font-size: 14px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 6px; }
+  img { max-width: 100%; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding-inline: 24px; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+  .eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-  header.hero { text-align: center; padding: 72px 0 40px; position: relative; }
-  header.hero::before { content: ""; position: absolute; inset: -120px 0 auto; height: 520px; background: radial-gradient(600px 300px at 50% 30%, rgba(124, 108, 255, .28), transparent 70%); pointer-events: none; z-index: -1; }
-  .pill { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text-2); font-size: 13px; margin-bottom: 22px; }
-  .pill b { color: var(--teal); font-weight: 600; }
-  h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05; letter-spacing: -1.5px; margin: 0 0 20px; font-weight: 800; }
-  h1 span { background: linear-gradient(90deg, var(--accent-2), var(--teal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--text-2); max-width: 680px; margin: 0 auto 32px; }
-  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .platforms { color: var(--text-3); font-size: 14px; margin-top: 16px; }
-  .shot { margin: 56px auto 0; max-width: 1040px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0, 0, 0, .55), 0 0 0 8px rgba(124, 108, 255, .06); }
+  /* nav */
+  .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+  .brand { display: flex; align-items: center; gap: 10px; font: 700 19px/1 var(--display); text-decoration: none; }
+  .brand img { width: 28px; height: 28px; }
+  .nav .links { display: flex; gap: 26px; align-items: center; }
+  .nav .links a { text-decoration: none; color: var(--text-2); font-size: 15px; font-weight: 500; }
+  .nav .links a:hover { color: var(--text); }
+  .nav .links a.btn.primary { color: var(--brass-ink); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 13px 22px; border-radius: 11px; font: 600 16px/1.1 var(--body); text-decoration: none; border: 1px solid var(--line-2); background: var(--panel); color: var(--text); transition: transform .15s, background .15s, border-color .15s; cursor: pointer; }
+  .btn:hover { transform: translateY(-1px); border-color: var(--text-3); }
+  .btn.primary { background: var(--brass); border-color: var(--brass); color: var(--brass-ink); }
+  .btn.primary:hover { background: var(--brass-2); border-color: var(--brass-2); }
+  .btn.small { padding: 9px 15px; font-size: 14px; }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+
+  /* hero */
+  .hero { padding-block: 64px 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: center; }
+  .hero h1 { font-size: clamp(40px, 5.6vw, 68px); line-height: 1.02; letter-spacing: -.025em; font-weight: 800; margin: 18px 0 22px; }
+  .hero h1 em { font-style: normal; color: var(--brass); }
+  .lead { font-size: clamp(17px, 1.6vw, 20px); color: var(--text-2); max-width: 34em; margin: 0 0 30px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; color: var(--text-3); font-size: 14px; }
+  .meta span { display: inline-flex; align-items: center; gap: 7px; }
+  .meta svg { width: 15px; height: 15px; color: var(--ok); }
+
+  /* the live deck */
+  .deck { position: relative; background: var(--bg-2); border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: 0 30px 80px rgba(0, 0, 0, .35); }
+  .deck-bar { display: flex; align-items: center; gap: 10px; padding: 4px 6px 14px; color: var(--text-3); font: 500 13px/1 var(--mono); }
+  .deck-bar .dots { display: flex; gap: 6px; }
+  .deck-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line-2); }
+  .deck-bar b { color: var(--text-2); font-weight: 600; margin-left: auto; }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px; min-width: 0; }
+  .tile.flag { border-color: color-mix(in srgb, var(--wait) 55%, var(--line)); }
+  .tile-top { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .ico { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none; color: #fff; }
+  .ico svg { width: 19px; height: 19px; }
+  .tile h3 { font: 600 15px/1.2 var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .state { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/1 var(--mono); color: var(--text-3); }
+  .state i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
+  .state.wait i { background: var(--wait); box-shadow: 0 0 0 3px color-mix(in srgb, var(--wait) 22%, transparent); }
+  .state.idle i { background: var(--info); box-shadow: 0 0 0 3px color-mix(in srgb, var(--info) 22%, transparent); }
+  .stat { font: 600 20px/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .stat.up { color: var(--ok); }
+  .note { font-size: 13px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .spark { width: 100%; height: 34px; display: block; }
+  .bar { height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 62%; background: var(--info); border-radius: 3px; transition: width 1s ease; }
+
+  .alert { position: absolute; right: -14px; bottom: -26px; width: min(300px, 82%); display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 14px; box-shadow: 0 18px 50px rgba(0, 0, 0, .35); }
+  .alert .ico { width: 30px; height: 30px; border-radius: 8px; background: var(--brass); color: var(--brass-ink); }
+  .alert strong { display: block; font-size: 14px; }
+  .alert small { color: var(--text-2); font-size: 13px; }
+  .alert .when { margin-left: auto; font: 500 11px/1.4 var(--mono); color: var(--text-3); flex: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .alert { animation: ping 7s ease-in-out 1.6s infinite both; }
+    @keyframes ping { 0%, 4% { transform: translateY(14px); opacity: .0; } 10%, 70% { transform: none; opacity: 1; } 78%, 100% { transform: translateY(8px); opacity: 0; } }
+  }
+
+  /* works with */
+  .works { padding-block: 64px 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+  .works .eyebrow { flex-basis: 100%; margin-bottom: 4px; color: var(--text-3); }
+  .chip { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-size: 14px; color: var(--text-2); }
+
+  section { padding-block: 96px 0; }
+  .head { max-width: 44em; margin-bottom: 40px; }
+  .head h2 { font-size: clamp(30px, 3.8vw, 46px); line-height: 1.06; letter-spacing: -.02em; font-weight: 700; margin: 14px 0 14px; }
+  .head p { color: var(--text-2); margin: 0; font-size: 18px; }
+
+  /* before / after */
+  .ba { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .ba > div { border: 1px solid var(--line); border-radius: var(--r); padding: 24px; background: var(--panel); min-width: 0; }
+  .ba h3 { font: 600 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 16px; color: var(--text-3); }
+  .ba .after h3 { color: var(--brass); }
+  .ba ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ba li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; color: var(--text-2); }
+  .ba li svg { width: 18px; height: 18px; margin-top: 4px; }
+  .ba .before svg { color: var(--bad); }
+  .ba .after svg { color: var(--ok); }
+  .ba .after { border-color: color-mix(in srgb, var(--brass) 45%, var(--line)); }
+
+  /* features */
+  .feats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+  .feat { background: var(--bg-2); padding: 28px; min-width: 0; }
+  .feat .k { font: 600 12px/1 var(--mono); color: var(--brass); letter-spacing: .1em; text-transform: uppercase; }
+  .feat h3 { font-size: 21px; font-weight: 700; margin: 12px 0 8px; letter-spacing: -.01em; }
+  .feat p { margin: 0; color: var(--text-2); font-size: 16px; }
+  .feat .pro { display: inline-block; margin-left: 6px; padding: 2px 7px; border-radius: 6px; font: 600 11px/1.4 var(--mono); color: var(--brass); border: 1px solid color-mix(in srgb, var(--brass) 50%, transparent); vertical-align: 3px; }
+
+  /* code + status */
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+  .split .head { margin: 0; }
+  .split ul { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--text-2); }
+  .split li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; }
+  .split li svg { width: 18px; height: 18px; color: var(--brass); margin-top: 4px; }
+  .code { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; min-width: 0; }
+  .code .tab { display: flex; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font: 500 13px/1 var(--mono); color: var(--text-3); }
+  .code .tab span:first-child { color: var(--text); }
+  .code pre { margin: 0; padding: 20px; overflow-x: auto; font: 14px/1.7 var(--mono); color: var(--text-2); }
+  .code .c { color: var(--text-3); } .code .s { color: var(--ok); } .code .f { color: var(--brass); }
+
+  .shot { margin: 0; border-radius: var(--r); overflow: hidden; border: 1px solid var(--line); background: var(--bg-2); }
   .shot img { display: block; width: 100%; height: auto; }
+  .shot figcaption { padding: 12px 16px; font-size: 14px; color: var(--text-3); border-top: 1px solid var(--line); }
 
-  section { padding: 88px 0 0; }
-  h2 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.8px; margin: 0 0 12px; text-align: center; font-weight: 750; }
-  .sub { text-align: center; color: var(--text-2); max-width: 640px; margin: 0 auto 44px; }
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-  .card .ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 14px; background: rgba(124, 108, 255, .15); color: var(--accent-2); }
-  .card .ic svg { width: 22px; height: 22px; }
-  .card h3 { margin: 0 0 6px; font-size: 17px; }
-  .card p { margin: 0; color: var(--text-2); font-size: 15px; }
+  /* pricing */
+  .prices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .price { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .price.hot { border-color: var(--brass); box-shadow: 0 0 0 1px var(--brass), 0 24px 60px rgba(0, 0, 0, .25); }
+  .price .tier { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .price h3 { font-size: 20px; font-weight: 700; }
+  .tag { padding: 3px 10px; border-radius: 999px; font: 600 11px/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; background: var(--brass); color: var(--brass-ink); }
+  .amount { font: 800 46px/1.1 var(--display); letter-spacing: -.03em; margin-top: 14px; }
+  .amount small { font: 500 16px/1 var(--body); color: var(--text-3); letter-spacing: 0; }
+  .alt { color: var(--text-3); font-size: 14px; min-height: 2.8em; }
+  .price ul { list-style: none; padding: 0; margin: 14px 0 24px; display: grid; gap: 9px; }
+  .price li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; color: var(--text-2); font-size: 15px; }
+  .price li svg { width: 16px; height: 16px; margin-top: 4px; color: var(--ok); }
+  .price .btn { width: 100%; }
+  .price .btn + .btn { margin-top: 10px; }
+  .fine { color: var(--text-3); font-size: 14px; margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .fine span { display: inline-flex; gap: 7px; align-items: center; }
+  .fine svg { width: 15px; height: 15px; color: var(--text-3); }
 
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
-  .step { position: relative; padding: 24px 24px 24px 72px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
-  .step::before { counter-increment: s; content: counter(s); position: absolute; left: 22px; top: 22px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); font-weight: 700; }
-  .step h3 { margin: 4px 0 4px; font-size: 17px; }
-  .step p { margin: 0; color: var(--text-2); font-size: 15px; }
+  /* trust */
+  .trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .trust div { border-top: 2px solid var(--line-2); padding-top: 18px; min-width: 0; }
+  .trust h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .trust p { margin: 0; color: var(--text-2); font-size: 16px; }
 
-  .prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
-  .price { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 28px; display: flex; flex-direction: column; }
-  .price.hot { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 20px 60px rgba(124, 108, 255, .2); position: relative; }
-  .price.hot .tag { position: absolute; top: -12px; left: 28px; background: var(--accent); padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-  .price h3 { margin: 0; font-size: 18px; }
-  .amount { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin: 10px 0 0; }
-  .amount small { font-size: 16px; color: var(--text-3); font-weight: 500; letter-spacing: 0; }
-  .alt { color: var(--text-3); font-size: 14px; margin: 2px 0 18px; }
-  .price ul { list-style: none; padding: 0; margin: 0 0 24px; flex: 1; }
-  .price li { padding: 6px 0 6px 28px; position: relative; color: var(--text-2); font-size: 15px; }
-  .price li::before { content: ""; position: absolute; left: 0; top: 11px; width: 16px; height: 16px; border-radius: 50%; background: rgba(34, 197, 94, .18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/11px no-repeat; }
-  .price .btn { justify-content: center; }
-  .fine { text-align: center; color: var(--text-3); font-size: 14px; margin-top: 18px; }
-
-  .faq { max-width: 760px; margin: 0 auto; }
-  details { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; margin-bottom: 10px; }
-  summary { cursor: pointer; font-weight: 600; list-style: none; }
-  summary::after { content: "+"; float: right; color: var(--text-3); font-weight: 400; }
-  details[open] summary::after { content: "–"; }
+  /* faq */
+  .faq { display: grid; gap: 10px; max-width: 820px; }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px; }
+  summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--brass); font: 500 20px/1 var(--mono); }
+  details[open] summary::after { content: "−"; }
   details p { color: var(--text-2); margin: 10px 0 0; }
+  details a { color: var(--brass); }
 
-  .final { text-align: center; margin: 96px 0 0; padding: 56px 24px; border-radius: 24px; background: linear-gradient(135deg, rgba(124, 108, 255, .22), rgba(94, 234, 212, .08)); border: 1px solid var(--line); }
-  .final h2 { margin-bottom: 10px; }
-  .final p { color: var(--text-2); margin: 0 0 26px; }
-  footer { color: var(--text-3); font-size: 14px; padding: 48px 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  footer a { color: var(--text-2); text-decoration: none; margin-left: 18px; }
+  .final { margin-block: 112px 0; padding: 56px 40px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 40px; align-items: center; }
+  .final h2 { font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.02em; line-height: 1.08; }
+  .final p { color: var(--text-2); margin: 10px 0 0; }
+  footer { color: var(--text-3); font-size: 14px; padding-block: 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 24px; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  footer a { color: var(--text-2); text-decoration: none; }
+  footer a:hover { color: var(--text); }
 
-  @media (max-width: 860px) {
-    .grid, .steps, .prices { grid-template-columns: 1fr; }
-    nav .links a:not(.btn) { display: none; }
-    header.hero { padding-top: 40px; }
-    footer a { margin: 0 18px 0 0; }
+  @media (max-width: 900px) {
+    .hero, .split { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .feats, .prices, .trust { grid-template-columns: minmax(0, 1fr); }
+    .ba { grid-template-columns: minmax(0, 1fr); }
+    .nav .links a:not(.btn) { display: none; }
+    .alert { right: 10px; }
+    .final { grid-template-columns: minmax(0, 1fr); padding: 36px 24px; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding-inline: 16px; }
+    .tiles { grid-template-columns: minmax(0, 1fr); }
+    .tile:nth-child(n+3) { display: none; }
+    .hero { padding-top: 36px; }
+    .cta .btn { flex: 1 1 100%; }
   }
 </style>
 <script type="application/ld+json">
@@ -106,124 +231,295 @@
 </script>
 </head>
 <body>
-<div class="wrap">
-  <nav>
-    <a class="brand" href="#"><img src="logo.svg" alt="">Helmdeck</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 018 0v3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 21h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-candles" viewBox="0 0 24 24"><path d="M7 4v16M17 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="4.5" y="8" width="5" height="7" rx="1" fill="currentColor"/><rect x="14.5" y="6" width="5" height="9" rx="1" fill="currentColor"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="logo.svg" alt="" width="28" height="28">Helmdeck</a>
     <div class="links">
       <a href="#features">Features</a>
+      <a href="#builders">For builders</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download</a>
+      <a class="btn small primary dl" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download</a>
     </div>
-  </nav>
+  </div>
+</div>
 
+<main class="wrap" id="top">
   <header class="hero">
-    <div class="pill"><b>New</b> · Share your builds with everyone in one click</div>
-    <h1>One place for <span>every AI build</span> you make</h1>
-    <p class="lead">Trading bots, chat tools, game mod builders, local models. Helmdeck opens them in one click, shows how each one is doing right now, keeps them running, and lets you check on them from your phone.</p>
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
-      <a class="btn" href="#pricing">See Pro</a>
+    <div>
+      <span class="eyebrow">Mission control for AI builders</span>
+      <h1>Every AI build you've made, <em>on one deck.</em></h1>
+      <p class="lead">Trading bots, Discord bots, scrapers, game mod tools, local models. Helmdeck starts each one with a double-click, shows how it's doing right now, restarts it when it crashes, and pings your phone when it needs you.</p>
+      <div class="cta">
+        <a class="btn primary dl" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest"><svg><use href="#i-down"/></svg><span class="dl-label">Download free</span></a>
+        <a class="btn" href="#pricing">See Pro <svg><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="meta">
+        <span><svg><use href="#i-check"/></svg>Free for 3 builds</span>
+        <span><svg><use href="#i-check"/></svg>Windows, Mac and Linux</span>
+        <span><svg><use href="#i-check"/></svg>Runs on your PC, no account</span>
+      </div>
     </div>
-    <div class="platforms">Windows · Mac · Linux · Free for up to 3 builds</div>
-    <div class="shot"><img src="hub.png" alt="Helmdeck showing a trading bot running with live profit for today and a chart" width="1280" height="800"></div>
+
+    <div class="deck" aria-label="Example of the Helmdeck window with four builds">
+      <div class="deck-bar"><span class="dots"><i></i><i></i><i></i></span>My builds <b>4 running</b></div>
+      <div class="tiles">
+        <div class="tile">
+          <div class="tile-top"><span class="ico" style="background:#16a34a"><svg><use href="#i-candles"/></svg></span><div style="min-width:0"><h3>Trading Bot</h3><span class="state"><i></i>running</span></div></div>
+          <div class="stat up" id="pl">+$142.80</div>
+          <svg class="spark" viewBox="0 0 200 34" preserveAspectRatio="none" aria-hidden="true"><path id="sparkFill" d="" fill="color-mix(in srgb, var(--ok) 16%, transparent)"/><path id="sparkLine" d="" fill="none" stroke="var(--ok)" stroke-width="2"/></svg>
+          <div class="note">3 open positions</div>
+        </div>
+        <div class="tile flag">
+          <div class="tile-top"><span class="ico" style="background:#5865f2"><svg><use href="#i-chat"/></svg></span><div style="min-width:0"><h3>Server Helper</h3><span class="state wait"><i></i>needs you</span></div></div>
+          <div class="stat">218 replies</div>
+          <div class="note">"Can I post the weekly recap?"</div>
+        </div>
+        <div class="tile">
+          <div class="tile-top"><span class="ico" style="background:#7c3aed"><svg><use href="#i-cube"/></svg></span><div style="min-width:0"><h3>Mod Builder</h3><span class="state idle"><i></i>building</span></div></div>
+          <div class="stat" id="pct">62%</div>
+          <div class="bar"><span id="pctBar"></span></div>
+          <div class="note">Step 5 of 8: textures</div>
+        </div>
+        <div class="tile">
+          <div class="tile-top"><span class="ico" style="background:#8b5cf6"><svg><use href="#i-camera"/></svg></span><div style="min-width:0"><h3>ComfyUI</h3><span class="state"><i></i>running</span></div></div>
+          <div class="stat">127.0.0.1:8188</div>
+          <div class="note">Open on this PC or your phone</div>
+        </div>
+      </div>
+      <div class="alert" role="status">
+        <span class="ico"><svg><use href="#i-bell"/></svg></span>
+        <div><strong>Trading Bot reached $500</strong><small>+$503.12 today</small></div>
+        <span class="when">now</span>
+      </div>
+    </div>
   </header>
 
+  <div class="works" aria-label="Works with">
+    <span class="eyebrow">Runs anything you can start</span>
+    <span class="chip">Python</span><span class="chip">Node.js</span><span class="chip">Ollama</span><span class="chip">LM Studio</span><span class="chip">ComfyUI</span><span class="chip">Open WebUI</span><span class="chip">Discord bots</span><span class="chip">Streamlit</span><span class="chip">Claude Code</span>
+  </div>
+
+  <section>
+    <div class="head">
+      <span class="eyebrow">The problem</span>
+      <h2>You build fast with AI. Keeping track of it all is the slow part.</h2>
+      <p>Every new bot adds a terminal, a folder and a command to remember. Helmdeck turns that pile into one window you can read at a glance.</p>
+    </div>
+    <div class="ba">
+      <div class="before">
+        <h3>Without Helmdeck</h3>
+        <ul>
+          <li><svg><use href="#i-x"/></svg><span>Five terminals open and no idea which one is the bot</span></li>
+          <li><svg><use href="#i-x"/></svg><span>The bot crashed at 3 a.m. and you found out at lunch</span></li>
+          <li><svg><use href="#i-x"/></svg><span>API keys pasted into every project's .env</span></li>
+          <li><svg><use href="#i-x"/></svg><span>A loop quietly burned through your AI credit</span></li>
+        </ul>
+      </div>
+      <div class="after">
+        <h3>With Helmdeck</h3>
+        <ul>
+          <li><svg><use href="#i-check"/></svg><span>Every build is an icon. Double-click to start, see it's alive</span></li>
+          <li><svg><use href="#i-check"/></svg><span>It restarts on its own, and your phone buzzes if it can't</span></li>
+          <li><svg><use href="#i-check"/></svg><span>One encrypted key vault that every build shares</span></li>
+          <li><svg><use href="#i-check"/></svg><span>Free and local models first, and a monthly cap on paid ones</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <section id="features">
-    <h2>Stop juggling terminals and tabs</h2>
-    <p class="sub">Everything you've built with AI, in one window that tells you what's running, what's done and what needs you.</p>
-    <div class="grid">
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5l12 7-12 7z"/></svg></div><h3>One-click launch</h3><p>Scripts, servers, bots and web apps each get an icon. Double-click to start. No more remembering commands.</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 6-8 3 3"/></svg></div><h3>Live status</h3><p>See today's profit, progress or a status message on every build, with a chart and an alert when something needs you.</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><h3>On your phone</h3><p>Pair with a QR code. Start, stop and check your builds from anywhere in the house.</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/></svg></div><h3>One home for AI keys</h3><p>Add your OpenAI, Anthropic, Gemini or local model keys once. Every build uses them, free and local models first, and keys never leak into shared builds.</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M5 12H2M22 12h-3M6 6l2 2M16 16l2 2M6 18l2-2M16 8l2-2"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Keeps them running</h3><p>Restart after a crash, start with your PC, or run on a schedule. Plus a spend tracker with a monthly AI budget.</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg></div><h3>Share and discover</h3><p>Share a build in one click, install other people's with a safety scan first, and add friends to swap private builds.</p></div>
+    <div class="head">
+      <span class="eyebrow">What's on the deck</span>
+      <h2>Launch it, watch it, keep it running.</h2>
+    </div>
+    <div class="feats">
+      <div class="feat"><span class="k">Launch</span><h3>One-click start</h3><p>Scripts, servers, bots and web apps each get an icon. Helmdeck even finds the projects already on your PC and adds them for you.</p></div>
+      <div class="feat"><span class="k">Watch</span><h3>Live status on every tile</h3><p>Today's profit, progress, or "needs you", with a small chart of how it's trending. Two lines of code from your build.</p></div>
+      <div class="feat"><span class="k">Alert</span><h3>Phone alerts <span class="pro">PRO</span></h3><p>A ping on your phone or in Discord when a build crashes, finishes, needs you, or passes a profit or loss target you set.</p></div>
+      <div class="feat"><span class="k">Keep alive</span><h3>Restarts and schedules <span class="pro">PRO</span></h3><p>Restart after a crash, start with your PC, or run between set hours. Helmdeck keeps watching from the tray.</p></div>
+      <div class="feat"><span class="k">AI keys</span><h3>One vault, free first</h3><p>Add OpenAI, Claude, Gemini, Groq or Ollama once. Every build uses them through one local address that tries local and free models before paid ones.</p></div>
+      <div class="feat"><span class="k">Remote</span><h3>Your builds on your phone <span class="pro">PRO</span></h3><p>Scan a QR code, then start, stop and check every build from the couch or the office.</p></div>
+    </div>
+  </section>
+
+  <section id="builders">
+    <div class="split">
+      <div class="head">
+        <span class="eyebrow">For builders</span>
+        <h2>Your tile shows what you tell it to.</h2>
+        <p>Write a tiny status file from any language and the tile updates within seconds. The Python and Node helpers come built in, and starter templates have them wired up already.</p>
+        <ul>
+          <li><svg><use href="#i-check"/></svg><span>Starter templates: AI chat page, Discord bot, web page watcher, background job and more</span></li>
+          <li><svg><use href="#i-check"/></svg><span>Finds Ollama, LM Studio and ComfyUI on your PC and adds them in one click</span></li>
+          <li><svg><use href="#i-check"/></svg><span>Share a build to Browse in one click. Files that look like keys are blocked first.</span></li>
+        </ul>
+      </div>
+      <div class="code" aria-label="Example code">
+        <div class="tab"><span>bot.py</span><span>· Python</span></div>
+<pre><span class="f">from</span> helmdeck_status <span class="f">import</span> report, money
+
+<span class="c"># after each trade</span>
+stat, trend = money(<span class="s">142.80</span>)
+report(<span class="s">"running"</span>, stat=stat, trend=trend,
+       value=<span class="s">142.80</span>, message=<span class="s">"3 open positions"</span>)
+
+<span class="c"># when you need a decision</span>
+report(<span class="s">"waiting"</span>, message=<span class="s">"Approve the BTC trade?"</span>)</pre>
+      </div>
     </div>
   </section>
 
   <section>
-    <h2>Up and running in a minute</h2>
-    <p class="sub">No account needed to start. Try the live demo bot right away.</p>
-    <div class="steps">
-      <div class="step"><h3>Download Helmdeck</h3><p>Install it on Windows, Mac or Linux. It's free for up to 3 builds.</p></div>
-      <div class="step"><h3>Add your builds</h3><p>Pick a folder or a command. Helmdeck gives each build an icon and finds its status.</p></div>
-      <div class="step"><h3>Watch them work</h3><p>Live stats on every tile, alerts when something needs you, and your phone to check in from anywhere.</p></div>
-    </div>
+    <figure class="shot">
+      <img src="hub.png" alt="The Helmdeck window with a trading bot running and its profit for today" width="1280" height="800" loading="lazy">
+      <figcaption>The real app: the demo trading bot reporting its profit for today.</figcaption>
+    </figure>
   </section>
 
   <section id="pricing">
-    <h2>Simple pricing</h2>
-    <p class="sub">Start free. Upgrade when you have more than 3 builds or want your phone and keep-alive tools.</p>
+    <div class="head">
+      <span class="eyebrow">Pricing</span>
+      <h2>Free to start. Pay once when it earns its place.</h2>
+      <p>Free covers three builds and everything you need to try it properly. Pro removes the limit and adds the tools that keep builds running while you're away.</p>
+    </div>
     <div class="prices">
       <div class="price">
-        <h3>Free</h3>
+        <div class="tier"><h3>Free</h3></div>
         <div class="amount">$0</div>
-        <div class="alt">Forever</div>
+        <div class="alt">Forever, no account needed</div>
         <ul>
-          <li>Up to 3 builds</li>
-          <li>Live status and charts</li>
-          <li>AI key vault</li>
-          <li>Browse and install shared builds</li>
-          <li>Share your builds</li>
+          <li><svg><use href="#i-check"/></svg>Up to 3 builds</li>
+          <li><svg><use href="#i-check"/></svg>Live status and charts</li>
+          <li><svg><use href="#i-check"/></svg>AI key vault, free models first</li>
+          <li><svg><use href="#i-check"/></svg>Starter templates</li>
+          <li><svg><use href="#i-check"/></svg>Browse, install and share builds</li>
         </ul>
-        <a class="btn" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download</a>
+        <a class="btn dl" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
       </div>
       <div class="price hot">
-        <span class="tag">Early bird</span>
-        <h3>Pro, lifetime</h3>
-        <div class="amount">$39 <small>once</small></div>
-        <div class="alt">Or $29 a year, or $4 a month</div>
+        <div class="tier"><h3>Pro</h3><span class="tag">Early bird</span></div>
+        <div class="amount">$39 <small>once, for life</small></div>
+        <div class="alt">Or $29 a year, or $4 a month. Every update included.</div>
         <ul>
-          <li>Unlimited builds</li>
-          <li>Phone app</li>
-          <li>Restart, start with PC and schedules</li>
-          <li>AI budget caps</li>
-          <li>Daily backup to your GitHub</li>
-          <li>Sell your builds</li>
+          <li><svg><use href="#i-check"/></svg>Unlimited builds</li>
+          <li><svg><use href="#i-check"/></svg>Phone alerts and profit targets</li>
+          <li><svg><use href="#i-check"/></svg>Phone app: start and stop from anywhere</li>
+          <li><svg><use href="#i-check"/></svg>Restart on crash, start with PC, schedules</li>
+          <li><svg><use href="#i-check"/></svg>Monthly AI budget cap</li>
+          <li><svg><use href="#i-check"/></svg>Daily backup to your GitHub</li>
+          <li><svg><use href="#i-check"/></svg>Sell your own builds</li>
         </ul>
-        <a class="btn primary" href="https://helmdeck.lemonsqueezy.com/checkout/buy/bb9fc525-b210-4ca1-99fe-99503ac0c77c">Get Pro for life</a>
-        <a class="btn" style="margin-top:10px" href="https://helmdeck.lemonsqueezy.com/checkout/buy/8322bfbb-f262-4d39-ba0e-63eef34be83f">Monthly or yearly</a>
+        <a class="btn primary" href="https://helmdeck.lemonsqueezy.com/checkout/buy/bb9fc525-b210-4ca1-99fe-99503ac0c77c">Get Pro for $39</a>
+        <a class="btn" href="https://helmdeck.lemonsqueezy.com/checkout/buy/8322bfbb-f262-4d39-ba0e-63eef34be83f">Monthly or yearly</a>
       </div>
       <div class="price">
-        <h3>Business</h3>
-        <div class="amount">Per seat</div>
-        <div class="alt">Billed monthly</div>
+        <div class="tier"><h3>Business</h3></div>
+        <div class="amount" style="font-size:34px">Per seat</div>
+        <div class="alt">Billed monthly for your team</div>
         <ul>
-          <li>Everything in Pro for the whole team</li>
-          <li>Shared team workspace</li>
-          <li>Team apps and filters</li>
-          <li>One key, activated on every member's PC</li>
+          <li><svg><use href="#i-check"/></svg>Everything in Pro for every member</li>
+          <li><svg><use href="#i-check"/></svg>A shared Team tab of company apps</li>
+          <li><svg><use href="#i-check"/></svg>One key, activated on each member's PC</li>
         </ul>
         <a class="btn" href="https://helmdeck.lemonsqueezy.com/checkout/buy/b57ae067-21d5-4185-9cbe-24f4d7b556bf">Get Business</a>
       </div>
     </div>
-    <p class="fine">Secure checkout by Lemon Squeezy. Your key arrives by email; paste it into Helmdeck and you're done.</p>
+    <div class="fine">
+      <span><svg><use href="#i-lock"/></svg>Secure checkout by Lemon Squeezy</span>
+      <span><svg><use href="#i-check"/></svg>Your key arrives by email. Paste it into Helmdeck and you're done.</span>
+      <span><svg><use href="#i-check"/></svg>Works on 2 of your PCs</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="trust">
+      <div><h3>Your code stays home</h3><p>Helmdeck runs on your PC. It doesn't upload your builds, logs or files anywhere unless you press Share.</p></div>
+      <div><h3>Keys are encrypted</h3><p>AI keys are locked with your system's keychain. Builds you install from others use them through Helmdeck and never see the keys.</p></div>
+      <div><h3>Shared builds get checked</h3><p>Anything you install from Browse is scanned first, and sharing stops if a file looks like it holds a password.</p></div>
+    </div>
   </section>
 
   <section id="faq">
-    <h2>Questions</h2>
-    <p class="sub">&nbsp;</p>
+    <div class="head"><span class="eyebrow">Questions</span><h2>Before you download</h2></div>
     <div class="faq">
-      <details><summary>What counts as a "build"?</summary><p>Anything you made or use: a Python or Node script, a bot, a local web app, a game mod tool, an AI app like ComfyUI or Open WebUI. If you can start it with a command, a file or a link, Helmdeck can run it.</p></details>
-      <details><summary>Does Helmdeck see my code or my AI keys?</summary><p>No. Everything stays on your PC. Your keys are stored encrypted on your machine, and builds you install from others never get your raw keys.</p></details>
-      <details><summary>Windows says "Windows protected your PC". Is it safe?</summary><p>Helmdeck is new, so Windows doesn't recognize it yet. Click "More info", then "Run anyway". Signed installers are coming.</p></details>
-      <details><summary>How do I show live stats like profit?</summary><p>Your build writes a small status.json file (or serves a status link). The free Python and Node helpers make it two lines of code.</p></details>
+      <details><summary>What counts as a build?</summary><p>Anything you can start with a command, a file or a link: a Python or Node script, a bot, a local web app, a game mod tool, or an AI app like ComfyUI or Open WebUI.</p></details>
+      <details><summary>Does my build need changes to work?</summary><p>No. Any build starts and stops from Helmdeck as it is. Adding the two-line status helper is optional and gives the tile live stats.</p></details>
+      <details><summary>How do phone alerts work?</summary><p>Install the free ntfy app and scan the code in Helmdeck, or paste a Discord webhook. Alerts only carry the build's name and its status line.</p></details>
+      <details><summary>Windows says "Windows protected your PC". Is it safe?</summary><p>Helmdeck is new, so Windows doesn't recognize the installer yet. Click "More info", then "Run anyway". Signed installers are on the way.</p></details>
       <details><summary>Is lifetime really lifetime?</summary><p>Yes. Pay once and every future update is included. The early-bird price goes up later.</p></details>
-      <details><summary>How do I report a bug or suggest a feature?</summary><p>Click the light bulb in Helmdeck, or open the <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">ideas board</a>. The most-voted ideas get built first.</p></details>
+      <details><summary>How do I report a bug or ask for a feature?</summary><p>Click the light bulb in Helmdeck, or open the <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">ideas board</a>. The most-voted ideas get built first.</p></details>
     </div>
   </section>
 
   <div class="final">
-    <h2>Give your AI builds a home</h2>
-    <p>Free for up to 3 builds. Windows, Mac and Linux.</p>
-    <a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a>
+    <div>
+      <h2>Give your AI builds a home.</h2>
+      <p>Free for up to 3 builds, on Windows, Mac and Linux.</p>
+    </div>
+    <a class="btn primary dl" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest"><svg><use href="#i-down"/></svg><span class="dl-label">Download Helmdeck</span></a>
   </div>
 
   <footer>
     <span>© 2026 Helmdeck</span>
-    <span><a href="https://github.com/JoshVan-dev/helmdeck-releases/releases">All downloads</a><a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a></span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/JoshVan-dev/helmdeck-releases/releases">All downloads</a>
+      <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
   </footer>
-</div>
+</main>
+
+<script>
+(() => {
+  // Name the visitor's system on the download buttons.
+  const ua = navigator.userAgent;
+  const os = /Windows/i.test(ua) ? 'Windows' : /Mac OS X|Macintosh/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'Mac' : /Linux/i.test(ua) && !/Android/i.test(ua) ? 'Linux' : '';
+  if (os) document.querySelectorAll('.hero .dl-label').forEach(el => { el.textContent = `Download for ${os}`; });
+
+  // The demo deck: the trading bot's P/L drifts up and the mod builder makes progress.
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pl = document.getElementById('pl');
+  const line = document.getElementById('sparkLine');
+  const fill = document.getElementById('sparkFill');
+  const pct = document.getElementById('pct');
+  const bar = document.getElementById('pctBar');
+  let values = [60, 64, 61, 70, 76, 73, 82, 90, 87, 98, 104, 101, 112, 120, 117, 128, 134, 131, 139, 142.8];
+  let p = 62;
+  function draw() {
+    const min = Math.min(...values), max = Math.max(...values);
+    const pts = values.map((v, i) => [i / (values.length - 1) * 200, 31 - (v - min) / (max - min || 1) * 28]);
+    const d = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ');
+    line.setAttribute('d', d);
+    fill.setAttribute('d', d + ' L200 34 L0 34 Z');
+    const v = values[values.length - 1];
+    pl.textContent = (v >= 0 ? '+' : '-') + '$' + Math.abs(v).toFixed(2);
+    pct.textContent = Math.round(p) + '%';
+    bar.style.width = p + '%';
+  }
+  draw();
+  if (still) return;
+  setInterval(() => {
+    const last = values[values.length - 1];
+    values = [...values.slice(1), Math.round((last + (Math.random() * 6 - 2)) * 100) / 100];
+    p = p >= 99 ? 12 : p + Math.random() * 3;
+    draw();
+  }, 1600);
+})();
+</script>
 </body>
 </html>
