@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helmdeck for Claude Code and Claude Desktop</title>
+<meta name="description" content="Let Claude Code put the apps it builds straight into Helmdeck, start and debug them for you, and add hand-picked Claude Code plugins and Claude Desktop tools in one click.">
+<meta property="og:title" content="Helmdeck for Claude Code and Claude Desktop">
+<meta property="og:description" content="Let Claude Code put the apps it builds straight into Helmdeck, start and debug them for you, and add hand-picked Claude Code plugins and Claude Desktop tools in one click.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/claude.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/claude.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Helmdeck for Claude Code and Claude Desktop", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-14"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Works with Claude</span>
+<h1>Helmdeck for Claude Code and Claude Desktop</h1>
+<p class="lead">You ask Claude to build something, it works, and then it's one more folder you'll forget how to start. With Helmdeck connected, Claude puts each app it builds on your deck, starts it, and reads its output when something breaks.</p>
+
+<h2>Claude builds it, Helmdeck runs it</h2>
+<p>Helmdeck comes with a connector (an MCP server) for Claude Code and Claude Desktop. It also works with Cursor, Windsurf, VS Code and any other tool that speaks MCP. Once it's connected, you can say:</p>
+<pre>Build me a crypto price tracker and add it to Helmdeck.</pre>
+<p>Claude writes the app, adds it to Helmdeck with its own icon and start command, and can give it a live status line, like today's price or "needs you". Through the connector Claude can:</p>
+<ul>
+  <li>add an app it built, or update one it added before</li>
+  <li>see which builds are running and what each tile says</li>
+  <li>start and stop builds</li>
+  <li>read a build's latest output to find out why it stopped</li>
+  <li>wire an app to your AI keys through Helmdeck, so the app never sees the keys</li>
+</ul>
+<p>It can't remove builds, read your AI keys, or touch anything else in Helmdeck. The connector only answers programs running as you on your own computer.</p>
+
+<h2>Set it up in one click</h2>
+<p>Open Helmdeck, go to <strong>Settings → Connect AI coding tools</strong>, and press the button for Claude Code. Helmdeck runs the <code>claude mcp add</code> command for you. For other tools it shows the settings to paste, with a Copy button. If Helmdeck isn't open when Claude needs it, the connector opens it.</p>
+
+<h2>Claude Code plugins, picked for you</h2>
+<p>Under <strong>Plugins → Claude</strong>, Helmdeck lists hand-picked plugins from Anthropic and installs each one with a switch. They also show up in the Code tab of the Claude desktop app.</p>
+<div class="table"><table>
+<tr><th>Work smarter</th><th>Better code</th><th>Faster workflow</th></tr>
+<tr><td>Project memory</td><td>Feature builder</td><td>Git shortcuts</td></tr>
+<tr><td>Setup advisor</td><td>Code review</td><td>Guard rails</td></tr>
+<tr><td>Session report</td><td>Code simplifier</td><td>TypeScript smarts</td></tr>
+<tr><td></td><td>Security guard</td><td>Python smarts</td></tr>
+<tr><td></td><td>Frontend design</td><td></td></tr>
+</table></div>
+
+<h2>More useful Claude chats</h2>
+<p>Helmdeck can also add tools to the Claude desktop app's chats: the Helmdeck connector, a <strong>Memory</strong> tool that remembers facts between chats, and <strong>Step-by-step thinking</strong> for harder problems. Helmdeck only changes its own entries in Claude's settings and keeps a copy of the original file. Restart Claude afterwards to see them.</p>
+
+<h2>Spend less on the Claude API</h2>
+<p>Builds that call Claude go through Helmdeck's AI gateway, which turns on a few savings for you:</p>
+<ul>
+  <li><strong>Claude prompt caching</strong>, so long instructions you send again and again cost less</li>
+  <li><strong>Reuse repeat answers</strong> for questions a build has already asked</li>
+  <li><strong>Retry hiccups</strong> when the API has a brief error</li>
+  <li><strong>Free and local first.</strong> Builds try Ollama and free tiers before paid keys, and each build has a "Can use paid keys" switch</li>
+  <li><strong>A monthly budget cap</strong> on paid keys</li>
+</ul>
+
+<section class="cta">
+  <h2>Give Claude somewhere to put its builds</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+<p style="font-size:14px;color:var(--text-3)">Claude, Claude Code and Claude Desktop are made by Anthropic. Helmdeck is an independent app that works with them and isn't made or endorsed by Anthropic.</p>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+</div></footer>
+</body>
+</html>
