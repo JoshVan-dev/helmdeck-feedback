@@ -205,6 +205,8 @@
   .final { margin-block: 112px 0; padding: 56px 40px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 40px; align-items: center; }
   .final h2 { font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.02em; line-height: 1.08; }
   .final p { color: var(--text-2); margin: 10px 0 0; }
+  .dl-alt { color: var(--text-3); font-size: 14px; margin: 12px 0 0; }
+  .dl-alt a { color: var(--text-2); }
   footer { color: var(--text-3); font-size: 14px; padding-block: 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 24px; }
   footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
   footer a { color: var(--text-2); text-decoration: none; }
@@ -270,6 +272,7 @@
         <a class="btn primary dl" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest"><svg><use href="#i-down"/></svg><span class="dl-label">Download free</span></a>
         <a class="btn" href="#pricing">See Pro <svg><use href="#i-arrow"/></svg></a>
       </div>
+      <p class="dl-alt" id="dlAlt" hidden></p>
       <div class="meta">
         <span><svg><use href="#i-check"/></svg>Free for 3 builds</span>
         <span><svg><use href="#i-check"/></svg>Windows, Mac and Linux</span>
@@ -357,6 +360,15 @@
       <div class="feat"><span class="k">AI keys</span><h3>One vault, free first</h3><p>Add OpenAI, Claude, Gemini, Groq or Ollama once. Every build uses them through one local address that tries local and free models before paid ones.</p></div>
       <div class="feat"><span class="k">Remote</span><h3>Your builds on your phone <span class="pro">PRO</span></h3><p>Scan a QR code, then start, stop and check every build from the couch or the office.</p></div>
     </div>
+  </section>
+
+  <section id="claude">
+    <div class="head">
+      <span class="eyebrow">Works with Claude</span>
+      <h2>Claude builds it. Helmdeck runs it.</h2>
+      <p>Connect Claude Code or Claude Desktop in one click and Claude puts every app it builds on your deck, starts it, and reads its output when something breaks. Helmdeck also installs hand-picked Claude Code plugins with a switch and turns on Claude prompt caching for your builds.</p>
+    </div>
+    <a class="btn" href="claude.html">How it works with Claude <svg><use href="#i-arrow"/></svg></a>
   </section>
 
   <section id="builders">
@@ -462,6 +474,8 @@ report(<span class="s">"waiting"</span>, message=<span class="s">"It's $149.99 n
       <details><summary>Does my build need changes to work?</summary><p>No. Any build starts and stops from Helmdeck as it is. Adding the two-line status helper is optional and gives the tile live stats.</p></details>
       <details><summary>How do phone alerts work?</summary><p>Install the free ntfy app and scan the code in Helmdeck, or paste a Discord webhook. Alerts only carry the build's name and its status line.</p></details>
       <details><summary>Windows says "Windows protected your PC". Is it safe?</summary><p>Helmdeck is new, so Windows doesn't recognize the installer yet. Click "More info", then "Run anyway". Signed installers are on the way.</p></details>
+      <details><summary>My Mac says Helmdeck "can't be opened". What do I do?</summary><p>Helmdeck isn't signed with Apple yet, so macOS blocks it the first time. Open System Settings → Privacy &amp; Security, scroll down and click "Open Anyway" next to Helmdeck. You only need to do this once. Newer Macs (M1 and later) use the Apple silicon download; older Intel Macs use the Intel one.</p></details>
+      <details><summary>Which Linux download should I use?</summary><p>On Ubuntu, Debian or Mint, use the .deb file and open it with your software installer. On any other distro, use the .AppImage: mark it as executable (right-click → Properties → Allow executing, or <code>chmod +x</code>) and double-click it.</p></details>
       <details><summary>Is lifetime really lifetime?</summary><p>Yes. Pay once and every future update is included. The early-bird price goes up later.</p></details>
       <details><summary>How do I report a bug or ask for a feature?</summary><p>Click the light bulb in Helmdeck, or open the <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">ideas board</a>. The most-voted ideas get built first.</p></details>
     </div>
@@ -484,6 +498,7 @@ report(<span class="s">"waiting"</span>, message=<span class="s">"It's $149.99 n
       <a href="starter-builds.html">Starter builds</a>
       <a href="run-local-ai-windows.html">Run local AI on Windows</a>
       <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+      <a href="claude.html">Helmdeck for Claude</a>
     </nav>
   </footer>
 </main>
@@ -494,6 +509,30 @@ report(<span class="s">"waiting"</span>, message=<span class="s">"It's $149.99 n
   const ua = navigator.userAgent;
   const os = /Windows/i.test(ua) ? 'Windows' : /Mac OS X|Macintosh/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'Mac' : /Linux/i.test(ua) && !/Android/i.test(ua) ? 'Linux' : '';
   if (os) document.querySelectorAll('.hero .dl-label').forEach(el => { el.textContent = `Download for ${os}`; });
+
+  // Point the download buttons straight at this system's installer, so nobody has to pick
+  // from the list of files on GitHub. If GitHub can't be reached the buttons keep the list.
+  const all = 'https://github.com/JoshVan-dev/helmdeck-releases/releases/latest';
+  if (os) fetch('https://api.github.com/repos/JoshVan-dev/helmdeck-releases/releases/latest')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(rel => {
+      const find = re => (rel.assets || []).find(a => re.test(a.name));
+      const pick = {
+        Windows: find(/^Helmdeck-Setup-[\d.]+\.exe$/),
+        Mac: find(/-arm64\.dmg$/),
+        Linux: find(/\.AppImage$/),
+      }[os];
+      if (!pick) return;
+      document.querySelectorAll('a.dl').forEach(a => { a.href = pick.browser_download_url; });
+      const alt = document.getElementById('dlAlt');
+      const intel = os === 'Mac' && find(/-x64\.dmg$/);
+      const deb = os === 'Linux' && find(/\.deb$/);
+      const other = intel ? `<a href="${intel.browser_download_url}">Intel Mac</a> · `
+        : deb ? `<a href="${deb.browser_download_url}">.deb for Ubuntu and Debian</a> · ` : '';
+      alt.innerHTML = `${os === 'Mac' ? 'For Apple silicon Macs. ' : ''}${other}<a href="${all}">Other systems</a>`;
+      alt.hidden = false;
+    })
+    .catch(() => {});
 
   // The demo deck: the watched price drifts down and the inbox helper makes progress.
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
