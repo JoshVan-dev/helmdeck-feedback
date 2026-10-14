@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to keep a Python bot running 24/7 on Windows</title>
+<meta name="description" content="Four ways to keep a Python or Node bot running on a Windows PC: a restart loop, Task Scheduler, a Windows service, or Helmdeck. Plus how to get a phone alert when it crashes.">
+<meta property="og:title" content="How to keep a Python bot running 24/7 on Windows">
+<meta property="og:description" content="Four ways to keep a Python or Node bot running on a Windows PC: a restart loop, Task Scheduler, a Windows service, or Helmdeck. Plus how to get a phone alert when it crashes.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/keep-bot-running-windows.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/keep-bot-running-windows.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to keep a Python bot running 24/7 on Windows", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-14"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Guide</span>
+<h1>How to keep a Python bot running 24/7 on Windows</h1>
+<p class="lead">Your trading bot, Discord bot or scraper works fine until it doesn't: it crashes at 3am, Windows restarts for an update, and you find out the next afternoon. Here are four ways to keep it up on your own PC, from free and fiddly to one click, current as of October 2026.</p>
+
+<h2>First: stop Windows from sleeping</h2>
+<p>No method below helps if the PC is asleep. Open Settings → System → Power, and set "When plugged in, put my device to sleep after" to <strong>Never</strong>. The screen can still turn off.</p>
+
+<h2>1. A restart loop (free, 2 minutes)</h2>
+<p>Make a file called <code>run-bot.bat</code> next to your bot:</p>
+<pre>@echo off
+cd /d "%~dp0"
+:loop
+python bot.py
+echo Bot stopped. Restarting in 5 seconds...
+timeout /t 5 /nobreak &gt;nul
+goto loop</pre>
+<p>Double-click it and the bot starts again every time it exits. For Node, swap the <code>python</code> line for <code>node bot.js</code>.</p>
+<p><strong>Downsides:</strong> it lives in a console window you can close by accident, it doesn't start after a reboot, and if the bot crashes on startup it loops forever.</p>
+
+<h2>2. Task Scheduler (free, starts after a reboot)</h2>
+<ol>
+  <li>Open Task Scheduler and choose <strong>Create Task</strong> (not "Basic Task").</li>
+  <li>On <strong>Triggers</strong>, add "At log on".</li>
+  <li>On <strong>Actions</strong>, start your <code>run-bot.bat</code>.</li>
+  <li>On <strong>Settings</strong>, tick "If the task fails, restart every 1 minute" and untick "Stop the task if it runs longer than".</li>
+</ol>
+<p><strong>Downsides:</strong> you can't see whether it's running without opening Task Scheduler, and there's no log unless your bot writes one.</p>
+
+<h2>3. A Windows service with NSSM (free, runs before you log in)</h2>
+<p><a href="https://nssm.cc">NSSM</a> turns any program into a Windows service that restarts when it exits. From an admin PowerShell:</p>
+<pre>nssm install MyBot "C:\Path\To\python.exe" "C:\bots\mybot\bot.py"
+nssm set MyBot AppDirectory "C:\bots\mybot"
+nssm start MyBot</pre>
+<p><strong>Downsides:</strong> services run in the background with no window, so debugging means reading log files, and services don't see your user's environment and files the same way your terminal does.</p>
+
+<h2>Get a phone alert when it crashes</h2>
+<p>Install the free <strong>ntfy</strong> app on your phone and subscribe to a topic name only you know. Then add one line to the restart loop, after the bot exits:</p>
+<pre>curl -s -d "My bot stopped, restarting" ntfy.sh/your-secret-topic</pre>
+<p><code>curl</code> comes with Windows 10 and 11. A Discord webhook works the same way if you'd rather get the alert in a channel.</p>
+
+<h2>4. Helmdeck (one click, with a dashboard)</h2>
+<p>If you run more than one bot, the scripts above multiply fast. <a href="./">Helmdeck</a> does all of it from one window:</p>
+<ul>
+  <li><strong>Add the bot's folder</strong> and it becomes a tile you double-click to start. Helmdeck can find the Python and Node projects already on your PC.</li>
+  <li><strong>Restart if it stops</strong> brings a crashed bot back. If it keeps crashing straight away, Helmdeck stops retrying and the tile shows the problem instead of looping forever.</li>
+  <li><strong>Start with your PC, or run between set hours</strong>, per bot.</li>
+  <li><strong>Phone alerts</strong> through ntfy or a Discord webhook when a bot crashes, finishes, needs you, or its number passes a target you set, like today's profit.</li>
+  <li><strong>Live status on the tile.</strong> Two lines of Python show today's P/L, a progress bar or "needs you":</li>
+</ul>
+<pre>from helmdeck_status import report, money
+stat, trend = money(142.8)    # "+$142.80 today", shown in green
+report("running", stat=stat, trend=trend, value=142.8)</pre>
+<p>Helmdeck is free for 3 builds. Restarts, schedules and phone alerts are part of Pro, which is $39 once.</p>
+
+<h2>Which one should you use?</h2>
+<div class="table"><table>
+<tr><th></th><th>Restart loop</th><th>Task Scheduler</th><th>NSSM service</th><th>Helmdeck</th></tr>
+<tr><td>Restarts after a crash</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Starts after a reboot</td><td class="n">No</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Stops a crash loop</td><td class="n">No</td><td class="n">No</td><td>Throttles it</td><td class="y">Yes</td></tr>
+<tr><td>See what's running at a glance</td><td class="n">No</td><td class="n">No</td><td class="n">No</td><td class="y">Yes</td></tr>
+<tr><td>Phone alerts</td><td>With curl</td><td>With curl</td><td>With extra setup</td><td class="y">Built in</td></tr>
+<tr><td>Cost</td><td>Free</td><td>Free</td><td>Free</td><td>Free for 3, Pro $39 once</td></tr>
+</table></div>
+<p>For a single bot, Task Scheduler plus an ntfy line is plenty. Once you have a few bots, or want to see them all from your phone, that's what Helmdeck is for.</p>
+
+<section class="cta">
+  <h2>Keep every bot running from one window</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+</div></footer>
+</body>
+</html>
