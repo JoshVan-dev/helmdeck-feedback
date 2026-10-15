@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to keep a Discord bot online on your own PC (and auto-restart it)</title>
+<meta name="description" content="Why a self-hosted Discord bot goes offline, how to auto-restart it on Windows without getting rate-limited, and how to get an alert in Discord when it crashes. No paid hosting needed.">
+<meta property="og:title" content="How to keep a Discord bot online on your own PC (and auto-restart it)">
+<meta property="og:description" content="Why a self-hosted Discord bot goes offline, how to auto-restart it on Windows without getting rate-limited, and how to get an alert in Discord when it crashes. No paid hosting needed.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/discord-bot-auto-restart.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/discord-bot-auto-restart.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to keep a Discord bot online on your own PC (and auto-restart it)", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-15"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Guide</span>
+<h1>How to keep a Discord bot online on your own PC</h1>
+<p class="lead">Most "keep your bot online 24/7" guides end with "buy our hosting". If your PC is on most of the time anyway, you don't need it. Here's why self-hosted bots go offline, how to bring them back automatically without getting rate-limited, and how to hear about it when one dies. Current as of October 2026.</p>
+
+<h2>Why your bot goes offline</h2>
+<div class="table"><table>
+<tr><th>Cause</th><th>What you see</th><th>Fix</th></tr>
+<tr><td>The PC went to sleep or restarted for an update</td><td>Offline for hours, no error</td><td>Power settings, and start the bot with Windows</td></tr>
+<tr><td>An unhandled error crashed the process</td><td>Console window closed or shows a traceback</td><td>Auto-restart, plus fix the error from the log</td></tr>
+<tr><td>Internet dropped</td><td>Bot goes offline briefly, then usually comes back</td><td>discord.py and discord.js reconnect on their own, so nothing to do unless the process exits</td></tr>
+<tr><td>Token was reset or leaked</td><td>"Improper token" or 401 at login</td><td>Generate a new token in the Developer Portal. Restarting won't help</td></tr>
+<tr><td>Too many logins in a row</td><td>429 errors or a temporary block at login</td><td>Wait longer between restarts (see below)</td></tr>
+</table></div>
+
+<h2>Step 1: keep Windows awake</h2>
+<p>Settings → System → Power: set "When plugged in, put my device to sleep after" to <strong>Never</strong>. The screen can still turn off. In Windows Update → Advanced options, set <strong>active hours</strong> so update restarts happen when you're around.</p>
+
+<h2>Step 2: restart it automatically, slowly</h2>
+<p>A restart loop that logs back in instantly, over and over, is how bots get temporarily blocked by Discord's rate limits. Wait longer after each crash. Save this as <code>run-bot.bat</code> next to your bot:</p>
+<pre>@echo off
+cd /d "%~dp0"
+set WAIT=5
+:loop
+python bot.py
+echo Bot stopped. Restarting in %WAIT% seconds...
+timeout /t %WAIT% /nobreak &gt;nul
+set /a WAIT=WAIT*2
+if %WAIT% GTR 300 set WAIT=300
+goto loop</pre>
+<p>For discord.js, replace the <code>python</code> line with <code>node index.js</code>. The wait doubles after each crash, up to 5 minutes.</p>
+<p>To start it with Windows, press <strong>Win+R</strong>, type <code>shell:startup</code>, and put a shortcut to <code>run-bot.bat</code> in that folder. For more control (restart on failure, run before log-in), use Task Scheduler or NSSM as in our <a href="keep-bot-running-windows.html">guide to keeping a Python bot running 24/7</a>.</p>
+
+<h2>Step 3: get told when it crashes</h2>
+<p>Your bot can't tell you it's offline, but a <strong>webhook</strong> can, because it doesn't need the bot to be running. In a private channel, go to Edit Channel → Integrations → Webhooks → New Webhook, and copy its URL. Then add this line to the loop, right after the bot exits:</p>
+<pre>curl -s -H "Content-Type: application/json" -d "{\"content\":\"My bot stopped, restarting\"}" https://discord.com/api/webhooks/...</pre>
+<p>Prefer a phone notification? Use the free <strong>ntfy</strong> app instead: <code>curl -s -d "My bot stopped" ntfy.sh/your-secret-topic</code>.</p>
+
+<h2>The one-window way: Helmdeck</h2>
+<p>If you run more than one bot, the batch files pile up. <a href="./">Helmdeck</a> handles all of the above per bot, from one window:</p>
+<ul>
+  <li><strong>Restart if it stops.</strong> Helmdeck waits 2, 4, 8 seconds and longer between attempts (up to a minute), so you don't hammer Discord's login. A bot that crashes 5 times in 10 minutes is left stopped, and its tile shows the problem.</li>
+  <li><strong>Start with your PC</strong>, or only run between set hours.</li>
+  <li><strong>Alerts to a Discord webhook or your phone</strong> when a bot crashes, finishes, or needs you.</li>
+  <li><strong>Works without Node installed.</strong> Use <code>{node} index.js</code> as the start command, and Helmdeck runs it with its own built-in Node.</li>
+  <li><strong>A live number on the tile</strong>, like commands answered today:</li>
+</ul>
+<pre>const { report } = require('./helmdeck-status');
+report('running', { stat: `${count} replies today` });</pre>
+<p>Helmdeck is free for 3 builds. Restarts, schedules and alerts are part of Pro ($39 once).</p>
+
+<h2>When paid hosting is the better choice</h2>
+<p>If your PC is a laptop you carry around, or it's off at night, a small VPS or a bot host (a few dollars a month) will beat any local setup. Running on your own PC makes sense when the machine is on anyway, or when the bot uses things that only live there, like a local AI model through Ollama.</p>
+
+<section class="cta">
+  <h2>Keep every bot online from one window</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+</div></footer>
+</body>
+</html>
