@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get phone alerts from your trading bot (even when it crashes)</title>
+<meta name="description" content="Send a ping to your phone when your trading bot crashes, stops, or passes a profit or loss target, using the free ntfy app or a Discord webhook. Includes why alerts sent from inside the bot miss crashes, and how to fix it.">
+<meta property="og:title" content="Get phone alerts from your trading bot (even when it crashes)">
+<meta property="og:description" content="Send a ping to your phone when your trading bot crashes, stops, or passes a profit or loss target, using the free ntfy app or a Discord webhook. Includes why alerts sent from inside the bot miss crashes, and how to fix it.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/trading-bot-phone-alerts.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/trading-bot-phone-alerts.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Get phone alerts from your trading bot (even when it crashes)", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-20"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Guide</span>
+<h1>Get phone alerts from your trading bot</h1>
+<p class="lead">Most guides show you how to make your bot send a Telegram message when it places a trade. That's useful, but it misses the alert you need most: the one that says the bot has stopped. A bot that crashed at 3am can't tell you it crashed. Here's how to get both kinds of alert on your phone for free, and how to get them without writing any code. Current as of October 2026.</p>
+
+<h2>The two kinds of alert</h2>
+<div class="table"><table>
+<tr><th>Alert</th><th>Example</th><th>Who has to send it</th></tr>
+<tr><td>Something happened</td><td>"Bought 0.1 BTC", "Up $150 today"</td><td>The bot itself</td></tr>
+<tr><td>Something stopped</td><td>"Bot crashed", "Bot hasn't checked in for 10 minutes"</td><td>Something <em>outside</em> the bot that watches it</td></tr>
+</table></div>
+<p>If you only set up the first kind, a crash just means the messages go quiet, and quiet looks the same as "nothing to report". That's how a bot sits dead all night while the market moves.</p>
+
+<h2>Step 1: Pick where alerts go</h2>
+<p><strong>ntfy</strong> is a free phone app (Android and iPhone) that shows a notification whenever something is posted to a topic you subscribe to. There's no account and no bot token. Choose a long, random topic name, because anyone who knows the name can read it, then subscribe to it in the app.</p>
+<p><strong>A Discord webhook</strong> works too if you'd rather get alerts in a private channel: open the channel's settings, choose Integrations, then Webhooks, and copy the address.</p>
+
+<h2>Step 2: Alerts from inside the bot</h2>
+<p>Sending to ntfy is one web request. In Python:</p>
+<pre>import requests
+
+def alert(title, message, priority=3):
+    requests.post("https://ntfy.sh/your-long-random-topic",
+                  data=message.encode(),
+                  headers={"Title": title, "Priority": str(priority)},
+                  timeout=10)
+
+alert("Target hit", "Up $150.20 today", priority=4)</pre>
+<p>Wrap the call in <code>try</code>/<code>except</code> so a failed alert never stops the bot, and don't send one on every tick. Ntfy and Discord both limit how fast you can post.</p>
+
+<h2>Step 3: Alerts when the bot stops</h2>
+<p>This needs a small watcher that starts the bot and speaks up when it exits. On Windows, save this next to your bot as <code>run-bot.bat</code> and start the bot with it:</p>
+<pre>@echo off
+:loop
+python bot.py
+curl -s -H "Priority: 4" -d "Trading bot stopped. Restarting in 10 seconds." ntfy.sh/your-long-random-topic
+timeout /t 10 /nobreak &gt;nul
+goto loop</pre>
+<p>On Mac or Linux the same idea in a shell script:</p>
+<pre>while true; do
+  python3 bot.py
+  curl -s -H "Priority: 4" -d "Trading bot stopped. Restarting in 10 seconds." ntfy.sh/your-long-random-topic
+  sleep 10
+done</pre>
+<p>This catches crashes, but not a bot that's frozen without exiting, and it can spam you if the bot crashes again straight away. If the bot also needs to survive a reboot, see <a href="keep-bot-running-windows.html">how to keep a Python bot running 24/7 on Windows</a>.</p>
+
+<h2>The no-code way: Helmdeck</h2>
+<p><a href="./">Helmdeck</a> is a desktop app for Windows, Mac and Linux that runs your bots, scripts and AI apps from one window, and it can send these alerts for you. Open <strong>Settings → Phone alerts</strong>, scan the QR code with the ntfy app (or paste a Discord webhook), then send a test alert.</p>
+<ul>
+  <li><strong>Crash alerts come from Helmdeck, not the bot</strong>, so you hear about it even when the bot is dead. If "Restart if it stops" is on, the alert says Helmdeck is already restarting it.</li>
+  <li><strong>Pick the events you want:</strong> crashed, needs you, finished, or hit a problem.</li>
+  <li><strong>Profit and loss targets.</strong> If your bot reports a number, such as today's P/L, set an amount above or below which you want a ping. You get one alert when it crosses, not one every few seconds.</li>
+  <li><strong>No spam.</strong> The same alert for the same bot is sent at most once every 2 minutes, and no more than 30 alerts an hour in all.</li>
+  <li><strong>Nothing private leaves your PC.</strong> An alert carries only the bot's name and its one-line status, never files, logs or keys.</li>
+</ul>
+<p>To show the P/L on the bot's tile and use it for targets, the bot writes a small status file. Helmdeck's Python helper does it in two lines:</p>
+<pre>from helmdeck_status import report, money
+stat, trend = money(142.8)    # "+$142.80 today", shown in green
+report("running", stat=stat, trend=trend, value=142.8)</pre>
+<p>Helmdeck is free for 3 builds. Phone alerts and restarts are part of Pro, which is $39 once.</p>
+
+<h2>Which should you use?</h2>
+<div class="table"><table>
+<tr><th></th><th>Alerts in your code</th><th>Watcher script</th><th>Helmdeck</th></tr>
+<tr><td>Trade and profit alerts</td><td class="y">Yes</td><td class="n">No</td><td class="y">Yes, from a number the bot reports</td></tr>
+<tr><td>Alert when the bot crashes</td><td class="n">No</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Restarts the bot</td><td class="n">No</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Stops alert spam in a crash loop</td><td class="n">No</td><td class="n">No</td><td class="y">Yes</td></tr>
+<tr><td>Cost</td><td>Free</td><td>Free</td><td>Free for 3, Pro $39 once</td></tr>
+</table></div>
+<p>For one bot, a few lines in your code plus the watcher script covers it. When you're running several bots, Helmdeck gives you the same alerts for all of them, plus a live view of each from your phone.</p>
+
+<section class="cta">
+  <h2>Know the moment your bot stops</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+</div></footer>
+</body>
+</html>
