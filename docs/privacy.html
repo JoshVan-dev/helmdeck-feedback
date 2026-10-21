@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helmdeck Privacy Policy</title>
+<meta name="description" content="Helmdeck keeps your builds, settings and AI keys on your own computer. What goes where, and why.">
+<meta property="og:title" content="Helmdeck Privacy Policy">
+<meta property="og:description" content="Helmdeck keeps your builds, settings and AI keys on your own computer. What goes where, and why.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/privacy.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/privacy.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Legal</span>
+<h1>Helmdeck Privacy Policy</h1>
+<p><em>Last updated October 21, 2026. Helmdeck is run by Joshua Vandever, Illinois, United States.</em></p>
+<p><strong>In short:</strong> Helmdeck keeps your builds, settings and AI keys on your own computer. We don’t run servers that collect your data, and there’s no tracking or advertising.</p>
+<h2>What stays on your computer</h2>
+<ul>
+<li>Your builds, their settings, schedules, logs and stats.</li>
+<li>Your AI keys, encrypted with your system’s keychain (Windows DPAPI, macOS Keychain), along with your AI usage and spending figures.</li>
+<li>Your GitHub sign-in token, encrypted the same way.</li>
+<li>Your license key.</li>
+</ul>
+<p>We never see any of these.</p>
+<h2>What goes to other services, and why</h2>
+<ul>
+<li><strong>AI providers you add</strong> (for example Google, Groq, OpenAI, Anthropic) receive the requests your builds send through Helmdeck, sent with your own key. Their privacy policies apply.</li>
+<li><strong>GitHub</strong>, when you sign in: sharing builds, friends, likes, reviews, ideas, team workspaces, seller listings and backups are stored in your GitHub account or in public GitHub repos. Reviews, ideas, friend lists and listings are public. Backups go to a private repo in your account, and AI keys are only in a backup if you set a password, encrypted with it.</li>
+<li><strong>Lemon Squeezy</strong> checks your license key (with your computer’s name) when you activate Pro or Business, and about once a week after that. When you buy something, Lemon Squeezy handles your payment details. We don’t see your card.</li>
+<li><strong>The Helmdeck catalog:</strong> Helmdeck downloads a public list of shared builds and AI models from GitHub. This shares your IP address with GitHub, like visiting any web page.</li>
+<li><strong>Updates</strong> are downloaded from GitHub.</li>
+<li><strong>Antivirus:</strong> shared builds are scanned with the antivirus already on your computer (for example Microsoft Defender).</li>
+<li><strong>Phone access</strong> works only on your own network, protected by a pairing code.</li>
+<li><strong>Phone alerts (Pro),</strong> if you turn them on, send a short message (the build’s name and its status line) to the ntfy server you choose (ntfy.sh by default) or to your Discord webhook. Their privacy policies apply.</li>
+<li><strong>“Enjoying Helmdeck?”</strong> If you choose to send feedback from this prompt while signed in to GitHub, it’s posted as a public issue on our ideas board under your GitHub name. We only show your words on our website if you tick “OK to show”.</li>
+</ul>
+<h2>What we receive</h2>
+<p>We only see what you choose to send us: ideas or bug reports you post (which are public on GitHub), emails you send us, and, if you buy something, the order details Lemon Squeezy shares with sellers (your name, email and what you bought). We use these to support you and improve Helmdeck. We don’t sell them.</p>
+<h2>Our website</h2>
+<p>helmdeck.org is hosted on GitHub Pages and loads fonts from Google Fonts, so GitHub and Google see your IP address like any web page. The download button asks GitHub which installer is newest. The site uses no cookies, analytics or tracking.</p>
+<h2>Children</h2>
+<p>Helmdeck isn’t meant for children under 13.</p>
+<h2>Your choices</h2>
+<p>You can remove your AI keys, sign out of GitHub, deactivate your license and uninstall Helmdeck at any time. To delete Helmdeck’s data from a computer, delete its data folder (Windows: <code>%APPDATA%\Helmdeck</code>; macOS: <code>~/Library/Application Support/Helmdeck</code>; Linux: <code>~/.config/Helmdeck</code>). Public posts can be deleted on GitHub.</p>
+<h2>Changes and contact</h2>
+<p>If this policy changes, What’s new in the app will say so. Questions: <a href="mailto:hello@helmdeck.org">hello@helmdeck.org</a>, or <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">the ideas and bugs board</a>.</p>
+
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
