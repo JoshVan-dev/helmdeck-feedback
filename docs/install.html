@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to install Helmdeck (and why Windows warns you)</title>
+<meta name="description" content="Step-by-step install for Windows, Mac and Linux, what the "Windows protected your PC" warning means, and how to check your download is the real one.">
+<meta property="og:title" content="How to install Helmdeck (and why Windows warns you)">
+<meta property="og:description" content="Step-by-step install for Windows, Mac and Linux, what the "Windows protected your PC" warning means, and how to check your download is the real one.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/install.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/install.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to install Helmdeck (and why Windows warns you)", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-21"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Install guide</span>
+<h1>How to install Helmdeck</h1>
+<p class="lead">Helmdeck is new and its installers aren't signed by Microsoft or Apple yet, so both show a warning the first time you open it. Here's what to click, why the warning appears, and how to check your download is the real one.</p>
+
+<h2>Windows</h2>
+<ol>
+  <li>Download <strong>Helmdeck-Setup.exe</strong> from the <a href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">official downloads page</a>.</li>
+  <li>Open it. If a blue box says <strong>"Windows protected your PC"</strong>, click <strong>More info</strong>, then <strong>Run anyway</strong>.</li>
+  <li>Follow the installer: choose who it's for and where it goes (the defaults are fine), then click <strong>Install</strong>. It adds a Start menu entry and a desktop shortcut.</li>
+</ol>
+<p>Prefer not to install anything? The <strong>portable .exe</strong> on the same page runs without installing.</p>
+
+<h3>Why does Windows warn me?</h3>
+<p>Windows SmartScreen warns about any app it hasn't seen many times before, and about installers that aren't signed with a paid code-signing certificate. Helmdeck is new and not signed yet, so you see the warning. It doesn't mean Windows found anything wrong. A signed installer is on the way.</p>
+
+<h2>Mac</h2>
+<ol>
+  <li>Download the <strong>.dmg</strong>: the Apple silicon one for M1 and newer, the Intel one for older Macs.</li>
+  <li>Open it and drag Helmdeck into Applications.</li>
+  <li>The first time, macOS says Helmdeck "can't be opened". Open <strong>System Settings → Privacy &amp; Security</strong>, scroll down and click <strong>Open Anyway</strong> next to Helmdeck. You only do this once.</li>
+</ol>
+
+<h2>Linux</h2>
+<ul>
+  <li><strong>Ubuntu, Debian or Mint:</strong> download the <strong>.deb</strong> and open it with your software installer.</li>
+  <li><strong>Any other distro:</strong> download the <strong>.AppImage</strong>, mark it as executable (right-click → Properties → Allow executing, or <code>chmod +x</code>), then double-click it.</li>
+</ul>
+
+<h2>Check your download is the real one</h2>
+<p>Only download Helmdeck from <strong>helmdeck.org</strong> or <strong>github.com/JoshVan-dev/helmdeck-releases</strong>. Copies on other sites aren't ours.</p>
+<p>To be sure the file wasn't changed, compare its fingerprint (SHA-256) with the one GitHub shows next to each file on the <a href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">downloads page</a>.</p>
+<p><strong>Windows</strong> (PowerShell, in your Downloads folder):</p>
+<pre>Get-FileHash .\Helmdeck-Setup-*.exe -Algorithm SHA256</pre>
+<p><strong>Mac or Linux</strong> (Terminal):</p>
+<pre>shasum -a 256 ~/Downloads/Helmdeck-*</pre>
+<p>If the long code matches the one on GitHub, it's the file we published.</p>
+
+<h2>Updates and uninstalling</h2>
+<p>The installed version downloads updates in the background and offers to restart into the new version. The portable .exe doesn't update itself, so grab the newest one from the downloads page now and then. To remove it on Windows, open Settings → Apps → Installed apps, find Helmdeck and choose Uninstall. Your builds stay in their own folders.</p>
+
+<h2>Something went wrong?</h2>
+<p>Open an issue on the <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">ideas and bugs board</a> with what you clicked and what you saw, and we'll help.</p>
+
+<section class="cta">
+  <h2>Ready to install?</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
