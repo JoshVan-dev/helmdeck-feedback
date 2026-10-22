@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start Ollama and Open WebUI automatically (no Docker)</title>
+<meta name="description" content="How to have Ollama and Open WebUI running every time your PC starts, on Windows, Mac or Linux, without Docker. Includes a startup script, the common mistakes, and a one-click way with Helmdeck.">
+<meta property="og:title" content="Start Ollama and Open WebUI automatically (no Docker)">
+<meta property="og:description" content="How to have Ollama and Open WebUI running every time your PC starts, on Windows, Mac or Linux, without Docker. Includes a startup script, the common mistakes, and a one-click way with Helmdeck.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/ollama-open-webui-startup.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/ollama-open-webui-startup.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Start Ollama and Open WebUI automatically (no Docker)", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-22"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Guide</span>
+<h1>Start Ollama and Open WebUI automatically</h1>
+<p class="lead">You've got Ollama and Open WebUI working, and now you want your own private ChatGPT ready every time you turn on the PC. Most guides assume Docker. Here's how to do it without Docker on Windows, Mac and Linux, plus the mistakes that make it "randomly" stop working. Current as of October 2026.</p>
+
+<h2>Part 1: Ollama usually starts itself</h2>
+<p>The Ollama installer for Windows and Mac already starts Ollama when you log in. It sits in the tray or menu bar and serves models at <code>http://127.0.0.1:11434</code>. To check, restart and open that address in a browser. It should say "Ollama is running".</p>
+<p>On Linux, the install script sets Ollama up as a system service. <code>systemctl status ollama</code> shows whether it's on, and <code>sudo systemctl enable --now ollama</code> turns it on at boot.</p>
+<p>So the part you actually have to solve is Open WebUI.</p>
+
+<h2>Part 2: Start Open WebUI at login</h2>
+<p>If you installed Open WebUI with pip (it needs Python 3.11), it starts with <code>open-webui serve</code>. Put it in a virtual environment so other Python projects can't break it:</p>
+<pre>python -m venv C:\ai\open-webui\.venv
+C:\ai\open-webui\.venv\Scripts\pip install open-webui</pre>
+
+<h3>Windows</h3>
+<p>Save this as <code>open-webui.bat</code>:</p>
+<pre>@echo off
+:loop
+C:\ai\open-webui\.venv\Scripts\open-webui serve --port 8080
+timeout /t 10 /nobreak &gt;nul
+goto loop</pre>
+<p>Press <strong>Win + R</strong>, type <code>shell:startup</code>, and put a shortcut to the .bat file in the folder that opens. It now starts every time you log in, and the loop restarts it if it crashes. Open <code>http://localhost:8080</code> once it's up. The first start takes a minute or two.</p>
+
+<h3>Mac</h3>
+<p>Create a Launch Agent at <code>~/Library/LaunchAgents/com.openwebui.plist</code> that runs <code>~/ai/open-webui/.venv/bin/open-webui serve --port 8080</code> with <code>RunAtLoad</code> and <code>KeepAlive</code> set to true. Then load it with <code>launchctl load ~/Library/LaunchAgents/com.openwebui.plist</code>.</p>
+
+<h3>Linux</h3>
+<p>A user service is the cleanest way. Save this as <code>~/.config/systemd/user/open-webui.service</code>:</p>
+<pre>[Unit]
+Description=Open WebUI
+
+[Service]
+ExecStart=%h/ai/open-webui/.venv/bin/open-webui serve --port 8080
+Restart=on-failure
+
+[Install]
+WantedBy=default.target</pre>
+<p>Then run <code>systemctl --user enable --now open-webui</code>.</p>
+
+<h2>Why it stops working</h2>
+<div class="table"><table>
+<tr><th>What you see</th><th>Usual cause</th><th>Fix</th></tr>
+<tr><td>Open WebUI shows no models</td><td>It started before Ollama was ready</td><td>Refresh after a minute, or check the Ollama address in Open WebUI's settings is <code>http://127.0.0.1:11434</code></td></tr>
+<tr><td>"Address already in use"</td><td>Another copy is already running on port 8080</td><td>Close the old window, or pick another port with <code>--port</code></td></tr>
+<tr><td>Worked yesterday, broken after an update</td><td>A pip update in the wrong Python changed its packages</td><td>Keep Open WebUI in its own virtual environment, as above</td></tr>
+<tr><td>Slow or out of memory</td><td>A big model loaded alongside other GPU apps</td><td>Use a smaller model, or close ComfyUI and other GPU apps first</td></tr>
+</table></div>
+
+<h2>The one-click way: Helmdeck</h2>
+<p><a href="./">Helmdeck</a> is a desktop app for Windows, Mac and Linux that starts and watches the AI apps on your PC. For this setup it does most of the work:</p>
+<ul>
+  <li><strong>Open WebUI in one click.</strong> Helmdeck installs it in its own virtual environment and adds it as a tile that opens the chat on port 8080. You still need Python 3.11 or newer, and Helmdeck tells you if it's missing.</li>
+  <li><strong>Finds Ollama for you.</strong> Quick setup spots Ollama, LM Studio and ComfyUI already on your PC. Add Ollama under AI keys and Helmdeck uses your local models first.</li>
+  <li><strong>Your keys in Open WebUI, too.</strong> Open WebUI is pointed at Helmdeck's AI gateway, so it can also use your OpenAI, Claude, Gemini or Groq keys, with free tiers and local models tried first.</li>
+  <li><strong>Starts with your PC and restarts if it stops</strong>, per app. If it keeps crashing straight away, Helmdeck stops retrying and shows the problem.</li>
+</ul>
+<p>Helmdeck is free for 3 builds. Starting with your PC and restarting on a crash are part of Pro.</p>
+
+<h2>Which should you use?</h2>
+<div class="table"><table>
+<tr><th></th><th>Startup script</th><th>Docker</th><th>Helmdeck</th></tr>
+<tr><td>Starts at login</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Restarts after a crash</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Setup</td><td>A file per app</td><td>Docker Desktop plus a compose file</td><td>One click</td></tr>
+<tr><td>Also runs ComfyUI and your own bots</td><td>A script for each</td><td>An image for each</td><td class="y">Yes, one tile each</td></tr>
+<tr><td>Cost</td><td>Free</td><td>Free for personal use</td><td>Free for 3, Pro for startup and restarts</td></tr>
+</table></div>
+<p>If Open WebUI is the only thing you run, the startup script is enough. Once you've got Ollama, Open WebUI, ComfyUI and a few bots of your own, one window for all of them is what Helmdeck is for.</p>
+
+<section class="cta">
+  <h2>Your private ChatGPT, ready when your PC is</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="ollama-open-webui-startup.html">Start Ollama and Open WebUI automatically</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
