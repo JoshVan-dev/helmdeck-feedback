@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helmdeck vs PM2, NSSM and Task Scheduler on Windows</title>
+<meta name="description" content="Keeping a Node or Python bot running on Windows? Here's how Helmdeck compares to PM2, NSSM and Task Scheduler for restart on crash, start with your PC, logs and phone alerts.">
+<meta property="og:title" content="Helmdeck vs PM2, NSSM and Task Scheduler on Windows">
+<meta property="og:description" content="Keeping a Node or Python bot running on Windows? Here's how Helmdeck compares to PM2, NSSM and Task Scheduler for restart on crash, start with your PC, logs and phone alerts.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/helmdeck-vs-pm2.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/helmdeck-vs-pm2.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Helmdeck vs PM2, NSSM and Task Scheduler", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-27"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Comparison</span>
+<h1>Helmdeck vs PM2, NSSM and Task Scheduler</h1>
+<p class="lead">If you've got a Discord bot, trading bot or script that has to stay up on a Windows PC, these are the usual options. They all restart things. The difference is how much setup they take and whether you can see what's going on.</p>
+
+<h2>The short version</h2>
+<p><strong>Pick PM2</strong> if you live in a terminal, mostly run Node apps, and deploy to Linux servers too. It's free and very capable, but on Windows its built-in <code>pm2 startup</code> command doesn't work, so starting with your PC needs an extra tool.</p>
+<p><strong>Pick NSSM</strong> if the program has to run as a real Windows service, before anyone signs in, on a machine nobody looks at. It's free and solid, but it has no dashboard and its last stable release came out in 2014.</p>
+<p><strong>Pick Task Scheduler</strong> if you only need something to start at a set time and you don't mind clicking through its settings. It's built into Windows, but it isn't designed to watch a program and bring it back when it crashes.</p>
+<p><strong>Pick Helmdeck</strong> if you want your bots on one screen where you can see which are running, read their logs, restart them after a crash, start them with your PC and get a ping on your phone when one goes down. It works with Node, Python or any command, and you set it up with clicks.</p>
+
+<h2>Side by side</h2>
+<div class="table"><table>
+<tr><th></th><th>Helmdeck</th><th>PM2</th><th>NSSM</th><th>Task Scheduler</th></tr>
+<tr><td>Restart after a crash</td><td class="y">Yes, waits 2s, 4s, 8s up to a minute (Pro)</td><td class="y">Yes</td><td class="y">Yes</td><td>Limited</td></tr>
+<tr><td>Stops retrying a build that keeps crashing</td><td class="y">After 5 crashes in 10 minutes, and tells you</td><td class="y">Yes, configurable</td><td>Throttles restarts</td><td class="n">No</td></tr>
+<tr><td>Start with your PC</td><td class="y">Yes, when you sign in (Pro)</td><td>Needs an extra tool on Windows</td><td class="y">Yes, before sign-in</td><td class="y">Yes</td></tr>
+<tr><td>Start and stop on a daily schedule</td><td class="y">Yes (Pro)</td><td>Cron restarts only</td><td class="n">No</td><td class="y">Yes</td></tr>
+<tr><td>See every bot's status on one screen</td><td class="y">Yes, with live numbers on each tile</td><td>In the terminal</td><td class="n">No</td><td>A list of tasks</td></tr>
+<tr><td>Read each bot's log</td><td class="y">Yes, one click</td><td class="y">Yes, <code>pm2 logs</code></td><td>Writes to a file you set</td><td class="n">No</td></tr>
+<tr><td>Phone alerts when something crashes</td><td class="y">Yes, ntfy or Discord (Pro)</td><td>Paid PM2 Plus</td><td class="n">No</td><td class="n">No</td></tr>
+<tr><td>Runs Python and other languages</td><td class="y">Yes, any command</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+<tr><td>Needs Node installed</td><td class="y">No, Helmdeck has its own</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>Set up without a terminal</td><td class="y">Yes</td><td class="n">No</td><td>Mostly no</td><td class="y">Yes</td></tr>
+<tr><td>Price</td><td>Free for 3 builds. Pro is $39 once.</td><td>Free</td><td>Free</td><td>Free, built in</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--text-3)">Checked against each tool's public docs as of October 2026. If something here is out of date, tell us at the <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">feedback board</a> and we'll fix it.</p>
+
+<h2>Where each one gets awkward</h2>
+<h3>PM2 on Windows</h3>
+<p>PM2 is a great process manager, but it was built for Linux. On Windows, <code>pm2 startup</code> doesn't set anything up, so people reach for add-ons like pm2-installer or a Windows service wrapper, and the older pm2-windows-service package is deprecated. You also manage everything with commands, which is fine at a desk and less fine when you just want to know if your bot is up.</p>
+<h3>NSSM</h3>
+<p>NSSM turns any program into a Windows service, so it can run before anyone signs in. That's exactly right for a headless server. For a bot on your own PC it means a service you set up from a command prompt, logs you have to point somewhere yourself, and no easy way to see what's happening.</p>
+<h3>Task Scheduler</h3>
+<p>Task Scheduler is good at "run this at 9am" and "run this when I sign in". Its restart setting only kicks in when a task fails to start, so a bot that runs for an hour and then crashes usually stays down.</p>
+
+<h2>How Helmdeck does it</h2>
+<p>Add your bot's folder or command and it becomes a tile. Use <code>{node} bot.js</code> to run a Node bot with Helmdeck's built-in Node, or any command like <code>python bot.py</code>. Turn on "Restart if it stops" and a crash is back in seconds, with a short wait between tries so a broken bot doesn't loop forever. Turn on start with your PC and Helmdeck opens quietly in the tray when you sign in and starts your bots. Closing the window keeps it running in the tray.</p>
+<p>With phone alerts on, you get a ping when a bot crashes, finishes or needs you. Two lines of code from your bot can also put a live number on its tile, like today's P/L or members online.</p>
+<p>One honest limit: Helmdeck runs when you're signed in to Windows. If your machine has to run a program with nobody signed in, NSSM or a Windows service is the better tool.</p>
+<p>Step-by-step guides: <a href="keep-bot-running-windows.html">keep a bot running 24/7 on Windows</a> and <a href="discord-bot-auto-restart.html">keep a Discord bot online</a>.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="helmdeck-vs-pm2.html">Helmdeck vs PM2</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
