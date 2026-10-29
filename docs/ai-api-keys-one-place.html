@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One place for your OpenAI, Claude, Gemini and Groq keys</title>
+<meta name="description" content="Stop pasting API keys into every project's .env. Keep OpenAI, Claude, Gemini, Groq and local Ollama in one encrypted place, use free tiers first, and only spend money when they run out.">
+<meta property="og:title" content="One place for your OpenAI, Claude, Gemini and Groq keys">
+<meta property="og:description" content="Stop pasting API keys into every project's .env. Keep OpenAI, Claude, Gemini, Groq and local Ollama in one encrypted place, use free tiers first, and only spend money when they run out.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/ai-api-keys-one-place.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/ai-api-keys-one-place.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "One place for your OpenAI, Claude, Gemini and Groq keys", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-10-29"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Guide</span>
+<h1>One place for your OpenAI, Claude, Gemini and Groq keys</h1>
+<p class="lead">If you build with AI, you probably have the same keys pasted into a dozen <code>.env</code> files, a bill from one provider while another's free tier sits unused, and no idea which script spent what. Here's a simpler setup.</p>
+
+<h2>The problem with a .env in every project</h2>
+<ul>
+<li><strong>Keys get everywhere.</strong> Each new bot or script gets its own copy. Rotate a key and you're hunting through folders, and one of those folders ends up on GitHub.</li>
+<li><strong>Free tiers go to waste.</strong> Gemini, Groq, OpenRouter and Mistral all give you a free daily allowance. Most scripts hard-code one paid provider, so the free ones never get used.</li>
+<li><strong>A rate limit breaks the script.</strong> When the one provider you picked says "429, slow down" or "daily quota used", the script just fails.</li>
+<li><strong>You can't see who spent what.</strong> The provider's bill shows one total, not which of your projects ran it up.</li>
+</ul>
+<p>Developer tools like LiteLLM fix some of this, but you have to set up and run a proxy server yourself. If you just want your keys in one place on your own PC, that's a lot of setup.</p>
+
+<h2>How Helmdeck handles it</h2>
+<h3>1. Add each key once</h3>
+<p>Click the key icon in Helmdeck's title bar, press Add key for each provider and paste it in. Get a key opens the provider's sign-up page if you don't have one yet. Helmdeck works with:</p>
+<div class="table"><table>
+<tr><th>Provider</th><th>Tier</th></tr>
+<tr><td>Ollama, LM Studio, or any OpenAI-compatible server on your PC</td><td>Free, nothing leaves your computer</td></tr>
+<tr><td>Google Gemini, Groq, OpenRouter (":free" models), Mistral</td><td>Free daily allowance</td></tr>
+<tr><td>Anthropic Claude, OpenAI, xAI Grok, DeepSeek</td><td>Paid, pay as you go</td></tr>
+</table></div>
+<p>Keys are encrypted with your operating system's own protection and stay on your PC. They're only ever sent to the provider they belong to, and the app only ever shows the last four characters.</p>
+
+<h3>2. Your builds get them automatically</h3>
+<p>Any bot or script you add to Helmdeck can be set to "Give it my keys". When it starts, it gets the usual variables, like <code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, <code>GEMINI_API_KEY</code> and <code>GROQ_API_KEY</code>, so the providers' own libraries work with no code changes and no <code>.env</code> file. Builds you install from other people never see your keys. They get "Gateway only" instead, which lets them use your AI without ever seeing a key.</p>
+
+<h3>3. Use free models first</h3>
+<p>Helmdeck runs a small OpenAI-compatible endpoint on your PC. Point any OpenAI client at it with <code>model: "auto"</code> and it tries models on your PC first, then free tiers, then paid keys. You can flip the first two so free tiers go first. When a provider says rate limited, quota used or out of credit, Helmdeck rests that key and sends the same request to the next one, so your script doesn't notice.</p>
+<pre><code>import os
+from openai import OpenAI
+
+client = OpenAI(base_url=os.environ["HELMDECK_AI_URL"],
+                api_key=os.environ["HELMDECK_AI_KEY"])
+reply = client.chat.completions.create(
+    model="auto",
+    messages=[{"role": "user", "content": "Summarise today in one line"}])
+print(reply.choices[0].message.content)</code></pre>
+<p>Use <code>"free"</code> to never spend money, <code>"local"</code> to keep everything on your PC, or name a provider like <code>"groq"</code> or <code>"openai/gpt-5"</code>. Claude works through the same endpoint, because Helmdeck translates the request for Anthropic's API.</p>
+
+<h3>4. Never get a surprise bill</h3>
+<p>"Use paid keys when the free ones run out" is a switch. Leave it off and Helmdeck stops at the free limits. Helmdeck also tracks what each build spends each month, and with Pro you can set a monthly budget that stops paid keys once it's reached while free and local models keep working.</p>
+
+<h2>Common questions</h2>
+<h3>Is it safe to keep all my keys in one app?</h3>
+<p>Safer than a dozen plain-text <code>.env</code> files. Keys are encrypted with your operating system's protection, stored only on your PC, and never sent anywhere except the provider they belong to.</p>
+<h3>Do I have to change my code?</h3>
+<p>No. If your code reads <code>OPENAI_API_KEY</code> or similar, it keeps working. You only change it if you want the free-first fallback, which is two lines.</p>
+<h3>Does it cost anything?</h3>
+<p>AI keys and the free-first gateway are in Helmdeck Free, which holds 3 builds. Pro adds unlimited builds, monthly AI budgets, restart on crash and phone alerts for $39 once.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="ai-api-keys-one-place.html">All your AI keys in one place</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
