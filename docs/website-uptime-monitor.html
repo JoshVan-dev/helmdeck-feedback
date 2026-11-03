@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A free website uptime monitor that runs on your own PC</title>
+<meta name="description" content="Watch your websites from your own computer: checks every few minutes, the tile turns red when a site is down, slow or broken, and your phone gets a ping. No server, no Docker, no monthly plan.">
+<meta property="og:title" content="A free website uptime monitor that runs on your own PC">
+<meta property="og:description" content="Watch your websites from your own computer: checks every few minutes, the tile turns red when a site is down, slow or broken, and your phone gets a ping. No server, no Docker, no monthly plan.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/website-uptime-monitor.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/website-uptime-monitor.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "A free website uptime monitor that runs on your own PC", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-11-03"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Starter build</span>
+<h1>A free website uptime monitor that runs on your own PC</h1>
+<p class="lead">If you run a few websites, a shop or a side project, you want to know the moment one goes down. Hosted monitors cap you with free-plan limits, and self-hosted ones like Uptime Kuma want a server or Docker. Helmdeck's Uptime monitor starter build runs on the computer you already have.</p>
+
+<h2>What it does</h2>
+<ul>
+<li><strong>Checks every site on a timer.</strong> Every 5 minutes by default, all your sites at once.</li>
+<li><strong>Catches more than "down".</strong> A site counts as a problem if it doesn't answer, answers with an error code, takes longer than 5 seconds, or is missing a bit of text you tell it to look for. That last one catches broken pages that still load.</li>
+<li><strong>Shows it on one tile.</strong> The tile reads "3 of 3 up" with each site's uptime percentage, and it charts the slowest response time so you can spot a site getting slower.</li>
+<li><strong>Pings your phone.</strong> With phone alerts on, the tile turning red sends you a notification through ntfy or Discord saying which site has the problem and why. The tile tells you when it's back up and how long it was down.</li>
+</ul>
+
+<h2>Set it up in a few minutes</h2>
+<ol>
+<li><a href="install.html">Install Helmdeck</a> on Windows, Mac or Linux.</li>
+<li>Open Browse, pick <strong>Uptime monitor</strong> and press Make it.</li>
+<li>Open the build's <code>config.json</code> and list your sites:
+<pre><code>{
+  "sites": [
+    { "name": "My shop", "url": "https://myshop.com" },
+    { "name": "Blog", "url": "https://myblog.com" }
+  ],
+  "everyMinutes": 5,
+  "slowSeconds": 5,
+  "lookFor": ""
+}</code></pre></li>
+<li>Start it. Turn on phone alerts to get the ping, and turn on "Restart if it stops" and "Start with Windows" so it keeps watching after a reboot.</li>
+</ol>
+<p>It's plain Node.js that runs with Helmdeck's built-in Node, so there's nothing else to install. You can open the code and change anything.</p>
+
+<h2>How it compares</h2>
+<div class="table"><table>
+<tr><th></th><th>Helmdeck Uptime monitor</th><th>Hosted monitors</th><th>Uptime Kuma</th></tr>
+<tr><td>Needs a server or Docker</td><td class="y">No</td><td class="y">No</td><td>Yes</td></tr>
+<tr><td>Checks from</td><td>Your PC</td><td>Their servers, around the world</td><td>Your server</td></tr>
+<tr><td>Works while your PC is off</td><td class="n">No</td><td class="y">Yes</td><td>If the server is on</td></tr>
+<tr><td>Checks for text on the page</td><td class="y">Yes</td><td>Often a paid feature</td><td class="y">Yes</td></tr>
+<tr><td>Code you can open and change</td><td class="y">Yes</td><td class="n">No</td><td class="y">Yes</td></tr>
+<tr><td>Next to your other bots and scripts</td><td class="y">Yes</td><td class="n">No</td><td class="n">No</td></tr>
+</table></div>
+<p>One honest limit: it checks from your computer, so it can't warn you while your PC is off or your internet is down. If a site earns you real money, use it alongside a hosted monitor rather than instead of one.</p>
+
+<h2>Common questions</h2>
+<h3>Is it free?</h3>
+<p>The starter build is free, and Helmdeck Free holds 3 builds. Phone alerts, restart on crash and start with your PC come with Pro, which is $39 once.</p>
+<h3>Can it watch things that aren't websites?</h3>
+<p>This build checks web addresses, including local ones like <code>http://localhost:3000</code>. Helmdeck already watches the bots and scripts you run in it, and tells you when one crashes, so you don't need a separate check for those.</p>
+
+<p>More starter builds: <a href="starter-builds.html">see them all</a>.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="website-uptime-monitor.html">Free website uptime monitor</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
