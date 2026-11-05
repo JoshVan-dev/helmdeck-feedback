@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free crypto and stock price alerts on your PC and phone</title>
+<meta name="description" content="Watch Bitcoin, Ethereum and stock prices on a desktop tile with a chart, and get a phone ping when one crosses your target. Free, runs on your own PC, and never trades.">
+<meta property="og:title" content="Free crypto and stock price alerts on your PC and phone">
+<meta property="og:description" content="Watch Bitcoin, Ethereum and stock prices on a desktop tile with a chart, and get a phone ping when one crosses your target. Free, runs on your own PC, and never trades.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/crypto-stock-price-alerts.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/crypto-stock-price-alerts.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Free crypto and stock price alerts on your PC and phone", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-11-05"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Starter build</span>
+<h1>Free crypto and stock price alerts on your PC and phone</h1>
+<p class="lead">You want to know when Bitcoin drops below a number or a stock passes your target, without keeping a trading app open all day or handing your account to another service. Helmdeck's Price tracker starter build watches prices from your own PC and pings your phone when one crosses your line.</p>
+
+<h2>What it does</h2>
+<ul>
+<li><strong>Watches crypto and stocks together.</strong> Crypto prices come from CoinGecko's free API (bitcoin, ethereum, solana and thousands more) and stock prices from Yahoo Finance's public data (AAPL, MSFT, TSLA and so on).</li>
+<li><strong>Puts the price on a tile.</strong> The first thing you watch is the big number on its tile, with a chart over time and an up or down arrow for today. The others show underneath with their change today.</li>
+<li><strong>Pings you once per crossing.</strong> Set an "above" or "below" target and the tile flags "needs you" the moment a price crosses it. With phone alerts on, you get a notification through ntfy or Discord. It won't ping again until the price comes back and crosses again.</li>
+<li><strong>Only watches.</strong> It never logs in to an exchange or broker and never buys or sells anything.</li>
+</ul>
+
+<h2>Set it up in a few minutes</h2>
+<ol>
+<li><a href="install.html">Install Helmdeck</a> on Windows, Mac or Linux.</li>
+<li>Open Browse, pick <strong>Price tracker</strong> and press Make it.</li>
+<li>Open the build's <code>config.json</code> and set what to watch and your targets:
+<pre><code>{
+  "watch": [
+    { "crypto": "bitcoin", "label": "BTC", "above": 120000, "below": 90000 },
+    { "crypto": "solana", "label": "SOL", "above": null, "below": 150 },
+    { "stock": "NVDA", "label": "Nvidia", "above": 200, "below": null }
+  ],
+  "currency": "usd",
+  "everyMinutes": 5
+}</code></pre></li>
+<li>Start it. Turn on phone alerts to get the pings.</li>
+</ol>
+<p>Use CoinGecko's id for a coin (the word in its CoinGecko page address, like <code>bitcoin</code>) and the normal ticker for a stock. Set a target to <code>null</code> to turn it off. Crypto can be shown in usd, eur, gbp and other currencies; stocks use their own market's currency.</p>
+
+<h2>Good to know</h2>
+<ul>
+<li><strong>Prices can be a few minutes behind.</strong> The free data sources aren't real-time, and the tracker checks every 5 minutes by default. It's for "tell me when it gets there", not for scalping.</li>
+<li><strong>It needs your PC on.</strong> It runs on your computer, so it can't check while the PC is off. Turn on "Restart if it stops" and "Start with Windows" so it comes back after a reboot.</li>
+<li><strong>You can change it.</strong> It's a short, readable Node.js script that runs with Helmdeck's built-in Node. Add a coin, change the chart, or send yourself a daily summary.</li>
+</ul>
+
+<h2>Running your own trading bot?</h2>
+<p>Helmdeck also runs and watches your own bots. They can put today's P/L on their tile, restart after a crash, and ping you when they stop or pass a profit or loss target. See <a href="trading-bot-phone-alerts.html">phone alerts for your trading bot</a>.</p>
+
+<h2>Is it free?</h2>
+<p>The Price tracker is free, and Helmdeck Free holds 3 builds. Phone alerts, restart on crash and start with your PC come with Pro, which is $39 once. More starter builds: <a href="starter-builds.html">see them all</a>.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="crypto-stock-price-alerts.html">Free crypto and stock price alerts</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
