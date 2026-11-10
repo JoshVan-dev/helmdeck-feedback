@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get a phone alert when a web page changes, free</title>
+<meta name="description" content="Watch any web page from your own PC and get a ping with a one-line AI summary when it changes or mentions a word you care about. Free, no browser extension, no monthly plan.">
+<meta property="og:title" content="Get a phone alert when a web page changes, free">
+<meta property="og:description" content="Watch any web page from your own PC and get a ping with a one-line AI summary when it changes or mentions a word you care about. Free, no browser extension, no monthly plan.">
+<meta property="og:image" content="https://helmdeck.org/hub.png">
+<meta property="og:url" content="https://helmdeck.org/website-change-alerts.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Helmdeck">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://helmdeck.org/website-change-alerts.html">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="page.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Get a phone alert when a web page changes, free", "publisher": {"@type": "Organization", "name": "Helmdeck", "url": "https://helmdeck.org"}, "dateModified": "2026-11-10"}</script>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="./"><img src="logo.svg" alt="">Helmdeck</a>
+  <span class="spacer"></span>
+  <a class="link" href="starter-builds.html">Starter builds</a>
+  <a class="link" href="run-local-ai-windows.html">Guide</a>
+  <a class="link" href="./#pricing">Pricing</a>
+  <a class="btn small primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download free</a>
+</div></header>
+<main><article class="wrap">
+<span class="eyebrow">Starter build</span>
+<h1>Get a phone alert when a web page changes, free</h1>
+<p class="lead">Waiting for a restock, a price drop, a new job post or a school announcement? Helmdeck's Web page watcher checks the page for you and tells you what changed in one plain sentence, so you stop refreshing it.</p>
+
+<h2>What it does</h2>
+<ul>
+<li><strong>Checks a page on a timer.</strong> Every 30 minutes by default. It compares the page's readable text, so changes to its scripts and styling don't count.</li>
+<li><strong>Says what changed.</strong> When the text changes, your AI writes a one-line summary, like "Two new jobs were added: Junior Designer and QA Tester." It uses the AI keys or local model you've set up in Helmdeck, and if you have none it just says the page changed.</li>
+<li><strong>Or waits for one word.</strong> Set <code>lookFor</code> to a word like "In stock" or "2027 dates" and it only tells you when that word appears.</li>
+<li><strong>Pings your phone.</strong> The tile flags "needs you" when there's news, and with phone alerts on you get a notification through ntfy or Discord.</li>
+</ul>
+
+<h2>Set it up in a few minutes</h2>
+<ol>
+<li><a href="install.html">Install Helmdeck</a> on Windows, Mac or Linux.</li>
+<li>Open Browse, pick <strong>Web page watcher</strong> and press Make it.</li>
+<li>Open the build's <code>config.json</code>:
+<pre><code>{
+  "url": "https://example.com/careers",
+  "everyMinutes": 30,
+  "lookFor": ""
+}</code></pre></li>
+<li>Start it, and turn on phone alerts to get the ping. To watch more pages, make another copy of the build for each one.</li>
+</ol>
+
+<h2>Good to know</h2>
+<ul>
+<li><strong>It reads the page the simple way.</strong> It fetches the page's HTML, like a quick visit with no browser. Pages that only fill in their content with JavaScript, or that need you to log in, may look empty or unchanged to it.</li>
+<li><strong>Be kind to the site.</strong> Checking every 30 minutes is plenty for most pages. Some sites don't allow automated checks, so read their terms first.</li>
+<li><strong>It needs your PC on.</strong> It runs on your computer. Turn on "Restart if it stops" and "Start with Windows" so it keeps going after a reboot.</li>
+</ul>
+
+<h2>How it compares</h2>
+<p>Browser extensions like Distill and hosted services like Visualping are good, and hosted services keep checking when your PC is off. The watcher is different in three ways: there's no monthly page limit, the AI summary uses your own keys or a free local model, and it sits on the same screen as everything else you run in Helmdeck.</p>
+
+<h2>Is it free?</h2>
+<p>The Web page watcher is free, and Helmdeck Free holds 3 builds. Phone alerts, restart on crash and start with your PC come with Pro, which is $39 once. More starter builds: <a href="starter-builds.html">see them all</a>.</p>
+
+<section class="cta">
+  <h2>Try Helmdeck free</h2>
+  <p>Free for 3 builds on Windows, Mac and Linux. No account needed.</p>
+  <div class="row"><a class="btn primary" href="https://github.com/JoshVan-dev/helmdeck-releases/releases/latest">Download Helmdeck</a><a class="btn" href="./">See what it does</a></div>
+</section>
+</article></main>
+<footer><div class="wrap">
+  <span>© 2026 Helmdeck</span>
+  <a href="./">Home</a>
+  <a href="website-change-alerts.html">Alerts when a web page changes</a>
+  <a href="starter-builds.html">Starter builds</a>
+  <a href="run-local-ai-windows.html">Run local AI on Windows</a>
+  <a href="trading-bot-phone-alerts.html">Trading bot phone alerts</a>
+  <a href="vs-pinokio.html">Helmdeck vs Pinokio</a>
+  <a href="claude.html">Helmdeck for Claude</a>
+  <a href="keep-bot-running-windows.html">Keep a bot running 24/7</a>
+  <a href="discord-bot-auto-restart.html">Keep a Discord bot online</a>
+  <a href="install.html">How to install</a>
+  <a href="https://github.com/JoshVan-dev/helmdeck-feedback/issues">Ideas and bugs</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+</div></footer>
+</body>
+</html>
